@@ -7,7 +7,7 @@
 # usb_name = sculpfun_s9_proofs_board
 # Adding this product to usb rules
 # sudo nano /etc/udev/rules.d/10-usb-serial.rules
-# SUBSYSTEM=="usb", ATTRS{idProduct}=="7523", ATTRS{idVendor}=="1a86", SYMLINK+="sculpfun_s9_proofs_board"
+# SUBSYSTEM=="tty", ATTRS{idProduct}=="7523", ATTRS{idVendor}=="1a86", SYMLINK+="sculpfun_s9_proofs_board"
 # sudo udevadm trigger
 
 
@@ -17,7 +17,7 @@
 # usb_name = sculpfun_laser_90_90
 # Adding this product to usb rules
 # sudo nano /etc/udev/rules.d/10-usb-serial.rules
-# SUBSYSTEM=="usb", ATTRS{idProduct}=="", ATTRS{idVendor}=="", SYMLINK+="sculpfun_laser_90_90"
+# SUBSYSTEM=="tty", ATTRS{idProduct}=="", ATTRS{idVendor}=="", SYMLINK+="sculpfun_laser_90_90"
 # sudo udevadm trigger
 
 
@@ -27,20 +27,20 @@
 # usb_name = sculpfun_laser_40_40_rotatory
 # Adding this product to usb rules
 # sudo nano /etc/udev/rules.d/10-usb-serial.rules
-# SUBSYSTEM=="usb", ATTRS{idProduct}=="7523", ATTRS{idVendor}=="1a86", SYMLINK+="sculpfun_laser_40_40_rotatory"
+# SUBSYSTEM=="tty", ATTRS{idProduct}=="7523", ATTRS{idVendor}=="1a86", SYMLINK+="sculpfun_laser_40_40_rotatory"
 # sudo udevadm trigger
 
 
 def identifying_laser_board(board_to_use: str):
 
     if board_to_use == 'sculpfun_s9_proofs':
-        port_name = "sculpfun_s9_proofs_board"
+        port_name = "/dev/sculpfun_s9_proofs_board"
         baud_rate = 115200
     elif board_to_use == 'sculpfun_s30_90_90':
-        port_name = "sculpfun_laser_90_90"
+        port_name = "/dev/sculpfun_laser_90_90"
         baud_rate = 115200
     elif board_to_use == 'sculpfun_s30_40_40_rotatory':
-        port_name = "sculpfun_laser_40_40_rotatory"
+        port_name = "/dev/sculpfun_laser_40_40_rotatory"
         baud_rate = 115200
     else:
         port_name = 'invalid board'

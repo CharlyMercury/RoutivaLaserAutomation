@@ -7,7 +7,7 @@ import serial
 
 class GcodeSender:
 
-    def __init__(self, port, baud_rate: int = 115200, timeout: int = 1):
+    def __init__(self, port: str, baud_rate: int = 115200, timeout: int = 1):
         self.port = port
         self.baud_rate = baud_rate
         self.serial_connection = None
@@ -15,7 +15,7 @@ class GcodeSender:
 
     def connection(self):
         try:
-            self.serial_connection = serial.Serial(self.port, self.baud_rate, self.timeout)
+            self.serial_connection = serial.Serial(port=self.port, baudrate=self.baud_rate, timeout=self.timeout)
             return f'Serial connection established on {self.port} at {self.baud_rate} bps.'
         except serial.SerialException as e:
             print(f"Error: {e}")
@@ -31,7 +31,6 @@ class GcodeSender:
 
     def __wake_up_machine(self):
         self.__send_g_code_command(command="\r\n\r\n")
-        time.sleep(2)
         self.serial_connection.flushInput()
 
     def __send_home_machine(self):
