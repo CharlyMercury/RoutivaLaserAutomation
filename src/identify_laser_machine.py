@@ -1,86 +1,54 @@
-import evdev
+# Parameters to know what device is connecting serial for
+# Tested on Raspberry 4 model B
+
+# Sculpfun S9 Board (This is the first board that we buy)
+# idProduct = "7523"
+# idVendor = "1a86"}
+# usb_name = sculpfun_s9_proofs_board
+# Adding this product to usb rules
+# sudo nano /etc/udev/rules.d/10-usb-serial.rules
+# SUBSYSTEM=="usb", ATTRS{idProduct}=="7523", ATTRS{idVendor}=="1a86", SYMLINK+="sculpfun_s9_proofs_board"
+# sudo udevadm trigger
 
 
-class IdentifierReader:
-    raspberry = ""  # v3 or v4
+# Sculpfun S30 Board (This is the s30 board - work area 90*90 cm)
+# idProduct = ""
+# idVendor = ""
+# usb_name = sculpfun_laser_90_90
+# Adding this product to usb rules
+# sudo nano /etc/udev/rules.d/10-usb-serial.rules
+# SUBSYSTEM=="usb", ATTRS{idProduct}=="", ATTRS{idVendor}=="", SYMLINK+="sculpfun_laser_90_90"
+# sudo udevadm trigger
 
-    """
-    #Diagrama raspberry ubicaciones fisicas (RaspBerry v4)
-    [1.3/input0] [1.1/input0]
-    [1.4/input0] [1.2/input0] [Entrada Ethernet]
 
-    #(OLD) Diagrama raspberry ubicaciones fisicas (RaspBerry v3)
+# Sculpfun S30 Board (This is the s30 board for rotatory machine - work area 40*40 cm)
+# idProduct = ""
+# idVendor = ""}
+# usb_name = sculpfun_laser_40_40_rotatory
+# Adding this product to usb rules
+# sudo nano /etc/udev/rules.d/10-usb-serial.rules
+# SUBSYSTEM=="usb", ATTRS{idProduct}=="7523", ATTRS{idVendor}=="1a86", SYMLINK+="sculpfun_laser_40_40_rotatory"
+# sudo udevadm trigger
 
-                        [usb-1.2/input0] [usb-1.4/input0]
-    [Entrada Ethernet]  [usb-1.3/input0] [usb-1.5/input0]
 
-    """
+def identifying_laser_board(board_to_use: str):
 
-    all_readers_conected = True  # Esta variable indica que TODOS los lectores estan conectados, independientemente de cuantos sean
-    one_device_disconnected = False  # Esta variable indica que UNO de los dispositivos esta desonectado
+    if board_to_use == 'sculpfun_s9_proofs':
+        port_name = "sculpfun_s9_proofs_board"
+        baud_rate = 115200
+    elif board_to_use == 'sculpfun_s30_90_90':
+        port_name = "sculpfun_laser_90_90"
+        baud_rate = 115200
+    elif board_to_use == 'sculpfun_s30_40_40_rotatory':
+        port_name = "sculpfun_laser_40_40_rotatory"
+        baud_rate = 115200
+    else:
+        port_name = 'invalid board'
+        baud_rate = 'invalid board'
 
-    ubicacion_fisica_lector = ""  # Cuando es un solo lector (Ya sea que registre entradas y salidas, solamente entradas, etc)
-    ubicacion_fisica_lector_entrada = ""  # Cuando hay un lector dedicado a entradas
-    ubicacion_fisica_lector_salida = ""  # Cuando hay un lector dedicado a salidas
+    laser_machine_parameters = {
+        'port': port_name,
+        'baud_rate': baud_rate
+    }
 
-    def start_setup(self, raspberry_version="v4"):
-        self.set_raspberry_version(raspberry_version)
-        self.initialize_ports_names()
-
-    def set_raspberry_version(self, version):
-        self.raspberry = version
-
-    def initialize_ports_names(self):
-        if self.raspberry == "v4":
-            ub_fisc_string = "usb-0000:01:00.0-"
-
-            self.ubicacion_fisica_lector = ub_fisc_string + "1.2/input0"
-            self.ubicacion_fisica_lector_entrada = ub_fisc_string + "1.4/input0"
-            self.ubicacion_fisica_lector_salida = ub_fisc_string + "1.2/input0"
-
-        elif self.raspberry == "v3":
-            ub_fisc_string = "usb-3f980000."
-
-            self.ubicacion_fisica_lector = ub_fisc_string + "usb-1.3/input0"
-            self.ubicacion_fisica_lector_entrada = ub_fisc_string + "usb-1.3/input0"
-            self.ubicacion_fisica_lector_salida = ub_fisc_string + "usb-1.5/input0"
-
-    def list_connected_devices():
-        devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
-        print("====================== (START) List Devices ======================")
-        for device in devices:
-            print("Name:", device.name)
-            print("Physical Location:", device.phys)
-            print()
-        print("====================== (END) List Devices ======================\n")
-
-    def leer_identificador(self, puerto_lector, tipo_registro):
-        lector = evdev.InputDevice(puerto_lector)
-
-        codigo_rfid = []
-        try:
-            for event in lector.read_loop():
-                if event.type == evdev.ecodes.EV_KEY:
-                    codigo = evdev.categorize(event)
-                    if codigo.keystate == 1:  # Solo considerar eventos de pulsación de tecla, no de liberación
-                        if codigo.keycode == 'KEY_ENTER':
-                            break
-                        elif codigo.keycode.startswith('KEY_'):
-                            digito = codigo.keycode.split('_')[1]  # Obtener el dígito eliminando 'KEY_' del código
-                            codigo_rfid.append(digito)
-            return ''.join(codigo_rfid)
-        except FileNotFoundError:
-            self.all_readers_conected = False
-            print(f"[ERROR] El lector de [{tipo_registro}] no está conectado")
-            return None
-        except OSError as e:
-            self.all_readers_conected = False
-            if e.errno == 19:
-                print(f"[ERROR] El lector de [{tipo_registro}] se desconectó")
-            else:
-                raise
-            return None
-        except Exception as e:
-            self.all_readers_conected = False
-            print("[ERROR] Ocurrió una excepción inesperada lectores:", str(e))
-            return None
+    return laser_machine_parameters
