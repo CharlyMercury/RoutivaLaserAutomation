@@ -3,7 +3,7 @@
 """
 import time
 import serial
-from g_code_draw import draw_g_code
+from src.g_code_draw import draw_g_code
 
 # Serial port and baud rate
 serial_port = "COM3"
@@ -47,7 +47,7 @@ def send_g_code(list_g_code):
 
 
 def run(g_code_file_):
-    first_point, g_code_draw = draw_g_code(file_g_code_name=g_code_file_)
+    g_code_draw = draw_g_code(file_g_code_name=g_code_file_)
 
     ser.write(str.encode("\r\n\r\n"))
     time.sleep(2)
