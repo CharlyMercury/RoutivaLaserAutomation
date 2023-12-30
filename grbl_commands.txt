@@ -1,0 +1,32 @@
+Encender Láser
+M4
+
+Apagar láser
+M5
+
+Laser power setting
+(max power)
+S1000
+(min power)
+S0
+
+Encender asistente de aire 
+M8 
+
+Apagar asistente de aire
+M9
+
+Potencia del láser
+S800
+
+Velocidad de capa
+F2500
+
+Rapid positioning
+G0 X0 Y0
+
+Controlled move with laser on
+G1 X50 Y50 F1000
+
+Apagar Laser
+G1 S0
