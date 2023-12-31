@@ -97,6 +97,7 @@ def run():
 
 
 if __name__ == '__main__':
+    machine_status = MachineStatus("192.168.0.23", broker_port=1883)
     # Create a daemon thread
     daemon_thread = threading.Thread(target=run)
     daemon_thread.daemon = True
