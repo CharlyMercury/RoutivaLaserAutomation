@@ -5,9 +5,15 @@ import time
 
 from src.identify_laser_machine import identifying_laser_board
 from src.gcode_sender import GcodeSender
+from src.machine_status import run_machine_status
 
 
 def run(g_code_file_, laser_machine_):
+
+    machine_status = run_machine_status()
+
+    if machine_status == "machine is ready to run":
+        print('lets go to run GCODE')
 
     laser_status = False
 

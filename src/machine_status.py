@@ -87,7 +87,7 @@ class MachineStatus:
         self.mqtt_client.publish("machine_status/laser_camera", status)
 
 
-def run():
+def run_machine_status():
     global laser_doors, smoke_extractor, material_workspace, available_space, leds_strip, laser_camera
 
     machine_status = MachineStatus("192.168.0.23", broker_port=1883)
