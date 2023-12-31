@@ -26,6 +26,7 @@ class MachineStatus:
                                       on_message_callback=self.on_message_callback)
         self.mqtt_client.connect()
         self.mqtt_client.subscribe(TOPICS)
+        self.publishing_request = False
 
     @staticmethod
     def on_message_callback(client, userdata, msg):
@@ -63,28 +64,40 @@ class MachineStatus:
             laser_camera = payload_message['laser_camera']['status']
 
     def laser_doors_status(self):
-        status = {'laser_doors': {'status': False}}
-        self.mqtt_client.publish("machine_status/laser_doors", json.dump(status))
+        if not self.publishing_request:
+            status = {'laser_doors': {'status': False}}
+            self.mqtt_client.publish("machine_status/laser_doors", json.dumps(status))
+            self.publishing_request = True
 
     def smoke_extractor_status(self):
-        status = {'smoke_extractor': {'status': False}}
-        self.mqtt_client.publish("machine_status/smoke_extractor", json.dump(status))
+        if not self.publishing_request:
+            status = {'smoke_extractor': {'status': False}}
+            self.mqtt_client.publish("machine_status/smoke_extractor", json.dumps(status))
+            self.publishing_request = True
 
     def material_workspace_status(self):
-        status = {'material_workspace': {'status': False}}
-        self.mqtt_client.publish("machine_status/material_workspace", json.dump(status))
+        if not self.publishing_request:
+            status = {'material_workspace': {'status': False}}
+            self.mqtt_client.publish("machine_status/material_workspace", json.dumps(status))
+            self.publishing_request = True
 
     def available_space_status(self):
-        status = {'available_space': {'status': False}}
-        self.mqtt_client.publish("machine_status/available_space", json.dump(status))
+        if not self.publishing_request:
+            status = {'available_space': {'status': False}}
+            self.mqtt_client.publish("machine_status/available_space", json.dumps(status))
+            self.publishing_request = True
 
     def leds_strip_status(self):
-        status = {'leds_strip': {'status': False}}
-        self.mqtt_client.publish("machine_status/leds_strip", json.dump(status))
+        if not self.publishing_request:
+            status = {'leds_strip': {'status': False}}
+            self.mqtt_client.publish("machine_status/leds_strip", json.dumps(status))
+            self.publishing_request = True
 
     def laser_camera_status(self):
-        status = {'laser_camera': {'status': False}}
-        self.mqtt_client.publish("machine_status/laser_camera", json.dump(status))
+        if not self.publishing_request:
+            status = {'laser_camera': {'status': False}}
+            self.mqtt_client.publish("machine_status/laser_camera", json.dumps(status))
+            self.publishing_request = True
 
 
 def run_machine_status():
@@ -92,45 +105,38 @@ def run_machine_status():
 
     machine_status = MachineStatus("192.168.0.23", broker_port=1883)
 
-    counter = 0
-
     while True:
 
-        if not laser_doors and counter == 1:
+        if not laser_doors:
             machine_status.laser_doors_status()
-            counter = 0
 
-        if laser_doors and not smoke_extractor and counter == 1:
+        if laser_doors and not smoke_extractor and machine_status.publishing_request:
+            machine_status.publishing_request = False
             machine_status.smoke_extractor_status()
-            counter = 0
 
-        if laser_doors and smoke_extractor and not material_workspace and counter == 1:
+        if laser_doors and smoke_extractor and not material_workspace and machine_status.publishing_request:
+            machine_status.publishing_request = False
             machine_status.material_workspace_status()
-            counter = 0
 
-        if laser_doors and smoke_extractor and material_workspace and not available_space and counter == 1:
+        if laser_doors and smoke_extractor and material_workspace and not available_space \
+                and machine_status.publishing_request:
+            machine_status.publishing_request = False
             machine_status.available_space_status()
-            counter = 0
 
         if laser_doors and smoke_extractor and material_workspace and available_space \
-                and not leds_strip and counter == 1:
+                and not leds_strip and machine_status.publishing_request:
+            machine_status.publishing_request = False
             machine_status.leds_strip_status()
-            counter = 0
 
         if laser_doors and smoke_extractor and material_workspace and \
-                available_space and leds_strip and not laser_camera and counter == 1:
+                available_space and leds_strip and not laser_camera and machine_status.publishing_request:
+            machine_status.publishing_request = False
             machine_status.laser_camera_status()
-            counter = 0
 
         if laser_doors and smoke_extractor and material_workspace and available_space and \
                 leds_strip and laser_camera:
             machine_status_message_ = 'machine is ready to run'
             break
-
-        counter += 1
-
-        if counter >= 10:
-            counter = 10
 
     return machine_status_message_
 
