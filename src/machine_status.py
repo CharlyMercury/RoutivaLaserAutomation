@@ -111,10 +111,10 @@ class MachineStatus:
             self.publishing_request = True
 
 
-def run_machine_status():
+def run_machine_status(host_ip: str):
     global laser_doors, smoke_extractor, material_workspace, available_space, leds_strip, laser_camera
 
-    machine_status = MachineStatus("192.168.0.23", broker_port=1883)
+    machine_status = MachineStatus(host_ip, broker_port=1883)
 
     while True:
 

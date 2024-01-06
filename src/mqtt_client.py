@@ -19,11 +19,11 @@ Verify the configuration:
 
 Mqtt client publisher
 
-    - $ mosquitto_pub -h 192.168.0.23 -p 1883 -t "my/topic" -m "Hello, MQTT!"
+    - $ mosquitto_pub -h 192.168.1.70 -p 1883 -t "my/topic" -m "Hello, MQTT!"
 
 Mqtt client subscriber
 
-    - $ mosquitto_sub -h 192.168.0.23 -p 1883 -t my/topic
+    - $ mosquitto_sub -h 192.168.1.70 -p 1883 -t my/topic
 
 """
 import time

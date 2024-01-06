@@ -10,7 +10,8 @@ from src.machine_status import run_machine_status
 
 def run(g_code_file_, laser_machine_):
 
-    machine_status = run_machine_status()
+    host_ip = "192.168.40.216"
+    machine_status = run_machine_status(host_ip)
 
     if machine_status == "machine is ready to run":
         print('lets go to run GCODE')
@@ -41,5 +42,5 @@ if __name__ == "__main__":
 
     new_file = 'example_3_cajita_6_6'
     g_code_file = f"examples/{new_file}.gcode"
-    laser_machine = 'sculpfun_s9_proofs'
+    laser_machine = 'sculpfun_s30_90_90'
     run(g_code_file, laser_machine)
