@@ -148,10 +148,10 @@ def run_machine_status(host_ip: str):
 
 
 """
-mosquitto_pub -h 192.168.0.23 -p 1883 -t "machine_status/laser_doors" -m '{"laser_doors": {"status": true}}'
-mosquitto_pub -h 192.168.0.23 -p 1883 -t "machine_status/smoke_extractor" -m '{"smoke_extractor": {"status": true}}'
-mosquitto_pub -h 192.168.0.23 -p 1883 -t "machine_status/material_workspace" -m '{"material_workspace": {"status": true}}'
-mosquitto_pub -h 192.168.0.23 -p 1883 -t "machine_status/available_space" -m '{"available_space": {"status": true}}'
-mosquitto_pub -h 192.168.0.23 -p 1883 -t "machine_status/leds_strip" -m '{"leds_strip": {"status": true}}'
-mosquitto_pub -h 192.168.0.23 -p 1883 -t "machine_status/laser_camera" -m '{"laser_camera": {"status": true}}'
+mosquitto_pub -h 192.168.40.216 -p 1883 -t "machine_status/laser_doors" -m '{"laser_doors": {"status": true}}'
+mosquitto_pub -h 192.168.40.216 -p 1883 -t "machine_status/smoke_extractor" -m '{"smoke_extractor": {"status": true}}'
+mosquitto_pub -h 192.168.40.216 -p 1883 -t "machine_status/material_workspace" -m '{"material_workspace": {"status": true}}'
+mosquitto_pub -h 192.168.40.216 -p 1883 -t "machine_status/available_space" -m '{"available_space": {"status": true}}'
+mosquitto_pub -h 192.168.40.216 -p 1883 -t "machine_status/leds_strip" -m '{"leds_strip": {"status": true}}'
+mosquitto_pub -h 192.168.40.216 -p 1883 -t "machine_status/laser_camera" -m '{"laser_camera": {"status": true}}'
 """
