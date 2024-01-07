@@ -10,7 +10,7 @@ from src.machine_status import run_machine_status
 
 def run(g_code_file_, laser_machine_):
 
-    host_ip = "192.168.40.216"
+    host_ip = "192.168.1.192"
     machine_status = run_machine_status(host_ip)
 
     if machine_status == "machine is ready to run":
