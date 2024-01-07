@@ -122,25 +122,31 @@ def run_machine_status(host_ip: str):
             machine_status.laser_doors_status()
 
         if laser_doors and not smoke_extractor and not machine_status.publishing_request:
+            print("Laser Doors Validated")
             machine_status.smoke_extractor_status()
 
         if laser_doors and smoke_extractor and not material_workspace and not machine_status.publishing_request:
+            print("Smoke Extractor Validated")
             machine_status.material_workspace_status()
 
         if laser_doors and smoke_extractor and material_workspace and not available_space \
                 and not machine_status.publishing_request:
+            print("Material Workspace Validated")
             machine_status.available_space_status()
 
         if laser_doors and smoke_extractor and material_workspace and available_space \
                 and not leds_strip and not machine_status.publishing_request:
+            print("Available Space Validated")
             machine_status.leds_strip_status()
 
         if laser_doors and smoke_extractor and material_workspace and \
                 available_space and leds_strip and not laser_camera and not machine_status.publishing_request:
+            print("Leds Strip Validated")
             machine_status.laser_camera_status()
 
         if laser_doors and smoke_extractor and material_workspace and available_space and \
                 leds_strip and laser_camera:
+            print("Laser Camera Validated")
             machine_status_message_ = 'machine is ready to run'
             break
 
