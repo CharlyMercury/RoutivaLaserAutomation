@@ -5,8 +5,7 @@ global checking_laser_doors
 
 def sub_cb(topic, msg):
     global checking_laser_doors
-    print((topic, msg))
-    payload_message = json.loads(msg.payload.decode())
+    payload_message = json.loads(msg.decode('utf-8'))
     laser_doors_source = payload_message['laser_doors']['source']
     laser_doors_status = payload_message['laser_doors']['status']
     if laser_doors_source == 'raspberry' and not laser_doors_status and topic == b'machine_status/laser_doors':
@@ -38,6 +37,8 @@ except OSError as e:
 # ESP32
 sensor = HCSR04(trigger_pin=5, echo_pin=18, echo_timeout_us=10000)
 
+checking_laser_doors = False
+
 
 while True:
     try:
@@ -47,6 +48,7 @@ while True:
             msg = b'{"laser_doors": {"source": "esp32", "status": true}}'
             client.publish(topic_pub, msg)
             last_message = time.time()
+            print(f'ESP sended: {msg} ')
             checking_laser_doors = False
     except OSError as e:
         restart_and_reconnect()

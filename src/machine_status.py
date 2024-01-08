@@ -163,5 +163,6 @@ mosquitto_pub -h 192.168.1.192 -p 1883 -t "machine_status/leds_strip" -m '{"leds
 mosquitto_pub -h 192.168.1.192 -p 1883 -t "machine_status/laser_camera" -m '{"laser_camera": {"status": true}}'
 
 mosquitto_sub -h broker.hivemq.com -p 1883 -t "machine_status/laser_doors" -q 1
+mosquitto_pub -h broker.hivemq.com -p 1883 -t "machine_status/laser_doors" -m '{"laser_doors": {"source": "raspberry", "status": false}}'
 
 """
