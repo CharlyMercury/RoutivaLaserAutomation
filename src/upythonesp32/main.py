@@ -1,8 +1,16 @@
 # Complete project details at https://RandomNerdTutorials.com
+import json
+global checking_laser_doors
+
 
 def sub_cb(topic, msg):
+    global checking_laser_doors
     print((topic, msg))
-    if topic == b'machine_status/laser_doors':
+    payload_message = json.loads(msg.payload.decode())
+    laser_doors_source = payload_message['laser_doors']['source']
+    laser_doors_status = payload_message['laser_doors']['status']
+    if laser_doors_source == 'raspberry' and not laser_doors_status and topic == b'machine_status/laser_doors':
+        checking_laser_doors = True
         print(f'ESP received: {msg} ')
 
 
@@ -34,17 +42,18 @@ sensor = HCSR04(trigger_pin=5, echo_pin=18, echo_timeout_us=10000)
 while True:
     try:
         client.check_msg()
-        if (time.time() - last_message) > message_interval:
-            distance = str(sensor.distance_cm()).encode()
-            msg = b'{"laser_doors": {"source": esp32, "status": true}}' + distance
+        distance = sensor.distance_cm()
+        if distance <= 5 and checking_laser_doors:
+            msg = b'{"laser_doors": {"source": "esp32", "status": true}}'
             client.publish(topic_pub, msg)
             last_message = time.time()
+            checking_laser_doors = False
     except OSError as e:
         restart_and_reconnect()
 
+
 # esptool --chip esp32 --port COM7 erase_flash
 # esptool --chip esp32 --port COM7 --baud 460800 write_flash -z 0x1000 'C:\Users\Charly Mercury\Downloads\ESP32_GENERIC-20240105-v1.22.1.bin'
-
 # ampy --port COM7 put boot.py
 # ampy --port COM7 put main.py
 # ampy --port COM7 put hcsr04.py

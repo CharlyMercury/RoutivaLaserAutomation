@@ -16,6 +16,7 @@ from time import sleep
 
 # ssid = 'INFINITUM2A5B_2.4'
 # password = 'FMxMFmE237'
+# mqtt_server = '192.168.1.192'
 ssid = 'IZZI-6D04'
 password = 'F0AF85386D04'
 mqtt_server = 'broker.hivemq.com'

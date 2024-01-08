@@ -35,13 +35,14 @@ class MachineStatus:
         # client_id = self.mqtt_client.get_client_id()
         # Ignore messages sent by this client
         # if msg.topic == f"your/topic/{client_id}":
-            # print("Ignoring message sent by this client.")
-            # return
+        # print("Ignoring message sent by this client.")
+        # return
 
         if msg.topic == 'machine_status/laser_doors':
             payload_message = json.loads(msg.payload.decode())
-            laser_doors = payload_message['laser_doors']['status']
-            if laser_doors:
+            laser_doors_source = payload_message['laser_doors']['source']
+            laser_doors_status = payload_message['laser_doors']['status']
+            if laser_doors_source == 'esp32' and laser_doors_status:
                 self.publishing_request = False
 
         if msg.topic == 'machine_status/smoke_extractor':
@@ -76,7 +77,7 @@ class MachineStatus:
 
     def laser_doors_status(self):
         if not self.publishing_request:
-            status = {'laser_doors': {'status': False}}
+            status = {'laser_doors': {'source': 'raspberry', 'status': False}}
             self.mqtt_client.publish("machine_status/laser_doors", json.dumps(status))
             self.publishing_request = True
 
@@ -122,7 +123,7 @@ def run_machine_status(host_ip: str):
             machine_status.laser_doors_status()
 
         if laser_doors and not smoke_extractor and not machine_status.publishing_request:
-            print("Laser Doors Validated")
+            print(" Estado de las puertas del Láser: Cerradas")
             machine_status.smoke_extractor_status()
 
         if laser_doors and smoke_extractor and not material_workspace and not machine_status.publishing_request:
