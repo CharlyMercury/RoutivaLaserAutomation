@@ -113,9 +113,9 @@ while True:
         distance = sensor.distance_cm()
         light_value_1 = light_1.read()
         light_value_2 = light_2.read()
-        print(distance, light_value_1, light_value_2)
+        # print(distance, light_value_1, light_value_2)
 
-        if distance <= 5 and checking_laser_doors:
+        if 5 >= distance > 0 and checking_laser_doors:
             msg = b'{"laser_doors": {"source": "esp32", "status": true}}'
             client.publish(b'machine_status/laser_doors', msg)
             print(f'ESP sended: {msg} ')
