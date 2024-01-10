@@ -12,14 +12,14 @@ from src.machine_status import run_machine_status
 
 def run(g_code_file_, laser_machine_):
 
-    # host_ip = "192.168.1.192"
-    host_ip = 'broker.hivemq.com'
+    host_ip = "192.168.1.192"
+    # host_ip = 'broker.hivemq.com'
     machine_status = run_machine_status(host_ip)
 
     if machine_status == "machine is ready to run":
         print('lets go to run GCODE')
 
-    """laser_status = False
+    laser_status = False
 
     laser_machine_parameters = identifying_laser_board(laser_machine_)
     g_code_sender = GcodeSender(
@@ -38,7 +38,7 @@ def run(g_code_file_, laser_machine_):
         time.sleep(4)
         g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
         if g_code_sender_status == 'Finished':
-            g_code_sender.close_serial_connection()"""
+            g_code_sender.close_serial_connection()
 
 
 if __name__ == "__main__":

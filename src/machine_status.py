@@ -27,17 +27,16 @@ class MachineStatus:
         self.mqtt_client.connect()
         self.mqtt_client.subscribe(TOPICS)
         self.publishing_request = False
-        self.laser_doors_status_var = False
 
     def on_message_callback(self, client, userdata, msg):
 
         global laser_doors, smoke_extractor, material_workspace, available_space, leds_strip, laser_camera
 
-        # client_id = self.mqtt_client.get_client_id()
+        client_id = self.mqtt_client.get_client_id()
         # Ignore messages sent by this client
-        # if msg.topic == f"your/topic/{client_id}":
-        # print("Ignoring message sent by this client.")
-        # return
+        if msg.topic == f"machine_status/laser_doors/{client_id}":
+            print("Ignoring message sent by this client.")
+            return
 
         if msg.topic == 'machine_status/laser_doors':
             payload_message = json.loads(msg.payload.decode())
@@ -151,9 +150,9 @@ def run_machine_status(host_ip: str):
             print("Leds Strip Validated")
             machine_status.laser_camera_status()
 
-        if laser_doors and smoke_extractor and material_workspace and available_space and \
-                leds_strip and laser_camera:
-            print("Laser Camera Validated")
+        if laser_doors and smoke_extractor and material_workspace:
+            # and available_space and leds_strip and laser_camera:
+            # print("Laser Camera Validated")
             machine_status_message_ = 'machine is ready to run'
             break
 

@@ -33,7 +33,7 @@ import paho.mqtt.client as mqtt
 class MqttClient:
 
     def __init__(self, broker_address, broker_port: int = 1883, username=None, password=None, on_message_callback=None):
-        self.client = mqtt.Client()
+        self.client = mqtt.Client(client_id="raspberry")
         self.broker_address = broker_address
         self.broker_port = broker_port
         self.username = username
@@ -87,7 +87,7 @@ class MqttClient:
         return self.client.is_connected()
 
     def get_client_id(self):
-        return self._client_id
+        return self.client.client_id
 
 
 # Example usage:
