@@ -1,48 +1,101 @@
 """
-    ssh edumediatics@192.168.1.192
+    The main objective of this project is to automate the process
+     of cutting and engraving MDF with a laser machine
 
-    With this script we can send G-code commands to the laser machine.
+    The project is composed of the following components:
+        - A module/function called machine_status/run_machine_status, which validates several
+        characteristics before sending the laser to cut.
+        - A module/function called identify_laser_machine/identifying_laser_board, which returns
+        a laser machine based on the input parameter.
+        - A module/class called gcode_sender/GcodeSender, which sends the input G-code to the
+        previously selected laser machine.
+
+    Use the following command in a PowerShell command prompt to connect to the Raspberry Pi using SSH:
+        - ssh edumediatics@192.168.1.192
+
 """
 import time
-
+import logging
+import datetime
+import os
+from src.machine_status import run_machine_status
 from src.identify_laser_machine import identifying_laser_board
 from src.gcode_sender import GcodeSender
-from src.machine_status import run_machine_status
 
 
-def run(g_code_file_, laser_machine_):
+# Get the current date and time
+absolute_path = os.getcwd()
+print(absolute_path)
+current_datetime = datetime.datetime.now()
+formatted_datetime = current_datetime.strftime("%Y_%m_%d_%H_%M_%S")
 
-    host_ip = "192.168.1.192"
-    # host_ip = 'broker.hivemq.com'
-    machine_status = run_machine_status(host_ip)
+# Logging setup
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename=f'{absolute_path}/logs/{formatted_datetime}.log'
+)
 
-    if machine_status == "machine is ready to run":
-        print('lets go to run GCODE')
 
+def run(g_code_file_: str, laser_machine_: str) -> None:
+    """
+    Main function.
+
+    :param g_code_file_: name of the gcode file to send to the laser machine.
+    :param laser_machine_: name of the laser machine.
+    :return: None
+    """
     laser_status = False
+    laser_machine_parameters = {
+        'port': '',
+        'baud_rate': 0
+    }
+    machine_status = ''
 
-    laser_machine_parameters = identifying_laser_board(laser_machine_)
-    g_code_sender = GcodeSender(
-        laser_machine_parameters['port'],
-        laser_machine_parameters['baud_rate'])
+    try:
+        broker_address = '192.168.1.192'  # 'broker.hivemq.com'
+        machine_status = run_machine_status(broker_address)
+        if machine_status == "machine is ready to run":
+            logging.info("Machine Status validated: let's get the machine name")
+    except Exception as err:
+        logging.error(f'An error occurred: {err}', exc_info=True)
 
-    connection_response = g_code_sender.connection()
-    if connection_response == f'Serial connection established on ' \
-                              f'{laser_machine_parameters["port"]} at ' \
-                              f'{laser_machine_parameters["baud_rate"]} bps.':
-        laser_status = True
-    elif connection_response == 'Serial Connection Failed':
-        laser_status = False
+    try:
+        if machine_status == "machine is ready to run":
+            laser_machine_parameters = identifying_laser_board(laser_machine_)
+            logging.info(f"Machine Name: {laser_machine_parameters}")
+        else:
+            raise Exception("The Machine is not ready to run")
+    except Exception as err:
+        logging.error(f'An error occurred: {err}', exc_info=True)
 
-    if laser_status:
-        time.sleep(4)
-        g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
-        if g_code_sender_status == 'Finished':
-            g_code_sender.close_serial_connection()
+    try:
+        g_code_sender = GcodeSender(
+            laser_machine_parameters['port'],
+            laser_machine_parameters['baud_rate'])
+        connection_response = g_code_sender.connection()
+        if connection_response == f'Serial connection established on ' \
+                                  f'{laser_machine_parameters["port"]} at ' \
+                                  f'{laser_machine_parameters["baud_rate"]} bps.':
+            laser_status = True
+            logging.info(f" Connected to laser machine: {connection_response}")
+        elif connection_response == 'Serial Connection Failed':
+            laser_status = False
+
+        if laser_status:
+            time.sleep(4)
+            logging.info(f"Sending Gcode to machine: {g_code_file_}")
+            g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
+            if g_code_sender_status == 'Finished':
+                logging.info("Finishing job.")
+                g_code_sender.close_serial_connection()
+        else:
+            raise Exception(" Problem to connect to machine ")
+    except Exception as err:
+        logging.error(f'An error occurred: {err}', exc_info=True)
 
 
 if __name__ == "__main__":
-
     new_file = 'example_3_cajita_6_6'
     g_code_file = f"examples/{new_file}.gcode"
     laser_machine = 'sculpfun_s30_90_90'
