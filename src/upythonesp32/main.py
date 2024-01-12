@@ -2,12 +2,12 @@
 import json
 import time
 
-global checking_laser_doors, checking_smoke_extractor, material_workspace, available_space, leds_strip, laser_camera
+global checking_laser_doors, checking_smoke_extractor, leds_strip
 from machine import Pin, ADC
 
 
 def sub_cb(topic, msg):
-    global checking_laser_doors, checking_smoke_extractor, material_workspace, available_space, leds_strip, laser_camera
+    global checking_laser_doors, checking_smoke_extractor, leds_strip
 
     payload_message = json.loads(msg.decode('utf-8'))
 
@@ -28,24 +28,6 @@ def sub_cb(topic, msg):
             checking_smoke_extractor = True
             print(f'ESP received: {msg} ')
 
-    if 'material_workspace' in payload_message:
-        material_workspace_source = payload_message['material_workspace']['source']
-        material_workspace_status = payload_message['material_workspace']['status']
-
-        if material_workspace_source == 'raspberry' \
-                and not material_workspace_status and topic == b'machine_status/material_workspace':
-            material_workspace = True
-            print(f'ESP received: {msg} ')
-
-    if 'available_space' in payload_message:
-        available_space_source = payload_message['available_space']['source']
-        available_space_status = payload_message['available_space']['status']
-
-        if available_space_source == 'raspberry' \
-                and not available_space_status and topic == b'machine_status/available_space':
-            available_space = True
-            print(f'ESP received: {msg} ')
-
     if 'leds_strip' in payload_message:
         leds_strip_source = payload_message['leds_strip']['source']
         leds_strip_status = payload_message['leds_strip']['status']
@@ -53,15 +35,6 @@ def sub_cb(topic, msg):
         if leds_strip_source == 'raspberry' \
                 and not leds_strip_status and topic == b'machine_status/leds_strip':
             leds_strip = True
-            print(f'ESP received: {msg} ')
-
-    if 'laser_camera' in payload_message:
-        laser_camera_source = payload_message['laser_camera']['source']
-        laser_camera_status = payload_message['laser_camera']['status']
-
-        if laser_camera_source == 'raspberry' \
-                and not laser_camera_status and topic == b'machine_status/laser_camera':
-            laser_camera = True
             print(f'ESP received: {msg} ')
 
 
@@ -72,10 +45,7 @@ def connect_and_subscribe():
     client.connect()
     client.subscribe(b'machine_status/laser_doors')
     client.subscribe(b'machine_status/smoke_extractor')
-    client.subscribe(b'machine_status/material_workspace')
-    client.subscribe(b'machine_status/available_space')
     client.subscribe(b'machine_status/leds_strip')
-    client.subscribe(b'machine_status/laser_camera')
     print(f'Connected to MQTT broker: {mqtt_server}')
     return client
 
@@ -96,10 +66,7 @@ sensor = HCSR04(trigger_pin=5, echo_pin=18, echo_timeout_us=10000)
 
 checking_laser_doors = False
 checking_smoke_extractor = False
-material_workspace = False
-available_space = False
 leds_strip = False
-laser_camera = False
 
 light_1 = ADC(Pin(34))
 light_2 = ADC(Pin(35))
@@ -128,8 +95,8 @@ while True:
             checking_smoke_extractor = False
 
         if light_value_2 >= 2000 and material_workspace:
-            msg = b'{"material_workspace": {"source": "esp32", "status": true}}'
-            client.publish(b'machine_status/material_workspace', msg)
+            msg = b'{"leds_strip": {"source": "esp32", "status": true}}'
+            client.publish(b'machine_status/leds_strip', msg)
             print(f'ESP sended: {msg} ')
             material_workspace = False
 

@@ -39,6 +39,7 @@
 import json
 import logging
 from src.mqtt_client import MqttClient
+from src.available_space_mdf_checker import available_space_in_mdf
 
 laser_doors = False
 smoke_extractor = False
@@ -91,7 +92,7 @@ class MachineStatus:
         :param msg: incoming message
         :return:
         """
-        global laser_doors, smoke_extractor, material_workspace, available_space, leds_strip, laser_camera
+        global laser_doors, smoke_extractor, leds_strip,  available_space, material_workspace, laser_camera
 
         client_id = self.mqtt_client.get_client_id()
         if msg.topic == f"machine_status/laser_doors/{client_id}":
@@ -109,21 +110,15 @@ class MachineStatus:
             if smoke_extractor_source == 'esp32' and smoke_extractor:
                 self.publishing_request = False
 
+        if msg.topic == 'machine_status/leds_strip':
+            leds_strip_source, leds_strip = self.decoding_topic_message(destination='leds_strip', message=msg)
+            if leds_strip_source == 'esp32' and leds_strip:
+                self.publishing_request = False
+
         if msg.topic == 'machine_status/material_workspace':
             material_workspace_source, material_workspace = self.decoding_topic_message(
                 destination='material_workspace', message=msg)
             if material_workspace_source == 'esp32' and material_workspace:
-                self.publishing_request = False
-
-        if msg.topic == 'machine_status/available_space':
-            available_space_source, available_space = self.decoding_topic_message(
-                destination='available_space', message=msg)
-            if available_space_source == 'esp32' and available_space:
-                self.publishing_request = False
-
-        if msg.topic == 'machine_status/leds_strip':
-            leds_strip_source, leds_strip = self.decoding_topic_message(destination='leds_strip', message=msg)
-            if leds_strip_source == 'esp32' and leds_strip:
                 self.publishing_request = False
 
         if msg.topic == 'machine_status/laser_camera':
@@ -171,26 +166,6 @@ class MachineStatus:
             self.pub_message(destination='smoke_extractor')
             self.publishing_request = True
 
-    def material_workspace_status(self):
-        """
-        Method to publish that the material workspace area should be validated
-
-        :return:
-        """
-        if not self.publishing_request:
-            self.pub_message(destination='material_workspace')
-            self.publishing_request = True
-
-    def available_space_status(self):
-        """
-        Method to publish that the available space should be validated
-
-        :return:
-        """
-        if not self.publishing_request:
-            self.pub_message(destination='available_space')
-            self.publishing_request = True
-
     def leds_strip_status(self):
         """
         Method to publish that the leds strips should be validated
@@ -199,6 +174,27 @@ class MachineStatus:
         """
         if not self.publishing_request:
             self.pub_message(destination='leds_strip')
+            self.publishing_request = True
+
+    def available_space_status(self):
+        """
+        Method to publish that the available space should be validated
+
+        :return:
+        """
+        global available_space
+        if not self.publishing_request:
+            available_space = available_space_in_mdf()
+            self.publishing_request = False
+
+    def material_workspace_status(self):
+        """
+        Method to publish that the material workspace area should be validated
+
+        :return:
+        """
+        if not self.publishing_request:
+            self.pub_message(destination='material_workspace')
             self.publishing_request = True
 
     def laser_camera_status(self):
@@ -220,7 +216,7 @@ def run_machine_status(broker_server_address: str):
     :param broker_server_address: address of the mqtt broker
     :return:
     """
-    global laser_doors, smoke_extractor, material_workspace, available_space, leds_strip, laser_camera
+    global laser_doors, smoke_extractor, leds_strip,  available_space, material_workspace, laser_camera
 
     machine_status = MachineStatus(broker_server_address, broker_port=1883)
 
@@ -230,31 +226,25 @@ def run_machine_status(broker_server_address: str):
             machine_status.laser_doors_status()
 
         if laser_doors and not smoke_extractor and not machine_status.publishing_request:
-            print(" Estado de las puertas del Láser: Cerradas")
             machine_status.smoke_extractor_status()
 
-        if laser_doors and smoke_extractor and not material_workspace and not machine_status.publishing_request:
-            print("Smoke Extractor Validated")
-            machine_status.material_workspace_status()
-
-        if laser_doors and smoke_extractor and material_workspace and not available_space \
-                and not machine_status.publishing_request:
-            print("Material Workspace Validated")
-            machine_status.available_space_status()
-
-        if laser_doors and smoke_extractor and material_workspace and available_space \
-                and not leds_strip and not machine_status.publishing_request:
-            print("Available Space Validated")
+        if laser_doors and smoke_extractor and not leds_strip and not machine_status.publishing_request:
             machine_status.leds_strip_status()
 
-        if laser_doors and smoke_extractor and material_workspace and \
-                available_space and leds_strip and not laser_camera and not machine_status.publishing_request:
-            print("Leds Strip Validated")
+        if laser_doors and smoke_extractor and leds_strip and not available_space \
+                and not machine_status.publishing_request:
+            machine_status.available_space_status()
+
+        if laser_doors and smoke_extractor and leds_strip and available_space \
+                and not material_workspace and not machine_status.publishing_request:
+            machine_status.material_workspace_status()
+
+        if laser_doors and smoke_extractor and leds_strip and available_space \
+                and material_workspace and not laser_camera and not machine_status.publishing_request:
             machine_status.laser_camera_status()
 
-        if laser_doors and smoke_extractor and material_workspace:
-            # and available_space and leds_strip and laser_camera:
-            # print("Laser Camera Validated")
+        if laser_doors and smoke_extractor and leds_strip and available_space \
+                and material_workspace and laser_camera:
             machine_status_message_ = 'machine is ready to run'
             break
 
