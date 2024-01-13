@@ -184,7 +184,8 @@ class MachineStatus:
         """
         global available_space
         if not self.publishing_request:
-            available_space = available_space_in_mdf()
+            # available_space = available_space_in_mdf()
+            available_space = True
             self.publishing_request = False
 
     def material_workspace_status(self):
