@@ -1,0 +1,39 @@
+Process to setup the camera livestream in a rtsp sever.
+
+ sudo apt update
+ sudo apt upgrade 
+ sudo apt install v4l-utils
+ sudo apt install ffmpeg
+ wget - c https://github.com/aler9/mediamtx/releases/download/v0.22.2/mediamtx_v0.22.2_linux_arm64v8.tar.gz -O - | sudo tar -xz
+
+
+Go to 
+
+edumediatics@raspberrypi:~ $ cd /home/edumediatics/.config/autostart/
+
+touch camera.desktop and add
+
+#!/bin/bash
+# edumediatics-Autorstart custom script
+# Location /home/edumediatics/
+[Desktop Entry]
+Type=Application
+Name=Routivacam
+Exec=/home/edumediatics/mediamtx
+
+touch camera_1.desktop and add
+
+#!/bin/bash
+# edumediatics-Autorstart custom script
+# Location /home/edumediatics/
+[Desktop Entry]
+Type=Application
+Name=Routivacam
+Exec=ffmpeg -input_format h264 -f video4linux2 -video_size 1920x1080 -framerate 30 -i /dev/video0 -c:v copy -an -f rtsp rtsp://localhost:8554/routivacam -rtsp_transport tcp
+
+sudo reboot
+
+add the following ip in vlc
+
+
+rtsp://192.168.1.192:8554/routivacam
