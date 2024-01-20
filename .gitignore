@@ -4,6 +4,7 @@
 
 ### Google Keys ###
 client_secrets*
+mycreds.json
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
