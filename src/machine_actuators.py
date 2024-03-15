@@ -61,10 +61,7 @@ class MachineActuators:
         :return:
         """
 
-        client_id = self.mqtt_client.get_client_id()
-        if msg.topic == f"machine_status/laser_doors/{client_id}":
-            print("Ignoring message sent by this client.")
-            return
+        print(msg)
 
     def pub_message(self, destination: str, status: bool = False):
         """
