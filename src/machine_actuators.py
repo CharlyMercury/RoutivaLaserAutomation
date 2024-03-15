@@ -61,8 +61,6 @@ class MachineActuators:
         :return:
         """
 
-        print(msg)
-
     def pub_message(self, destination: str, status: bool = False):
         """
         Method to publish a message to a specific topic

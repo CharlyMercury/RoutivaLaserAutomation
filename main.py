@@ -59,7 +59,6 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
     try:
         machine_actuators = run_machine_actuators(broker_address, True)
         print(machine_actuators)
-        del machine_actuators
         # machine_status = run_machine_status(broker_address)
         if machine_status == "machine is ready to run":
             logging.info("Machine Status validated: let's get the machine name")
@@ -96,7 +95,6 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
                 logging.info("Finishing job.")
                 machine_actuators = run_machine_actuators(broker_address, False)
                 print(machine_actuators)
-                del machine_actuators
                 g_code_sender.close_serial_connection()
         else:
             raise Exception(" Problem to connect to machine ")
