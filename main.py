@@ -53,6 +53,8 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
     }
     machine_status = ''
     broker_address = '192.168.1.192'  # 'broker.hivemq.com'
+    machine_actuators = run_machine_actuators(broker_address, False)
+    print(machine_actuators)
 
     try:
         machine_actuators = run_machine_actuators(broker_address, True)
