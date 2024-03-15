@@ -19,6 +19,7 @@ import logging
 import datetime
 import os
 from src.machine_status import run_machine_status
+from src.machine_actuators import run_machine_actuators
 from src.identify_laser_machine import identifying_laser_board
 from src.gcode_sender import GcodeSender
 
@@ -51,9 +52,12 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
         'baud_rate': 0
     }
     machine_status = ''
+    broker_address = '192.168.1.192'  # 'broker.hivemq.com'
 
     try:
-        broker_address = '192.168.1.192'  # 'broker.hivemq.com'
+        machine_actuators = run_machine_actuators(broker_address, True)
+        print(machine_actuators)
+        del machine_actuators
         machine_status = run_machine_status(broker_address)
         if machine_status == "machine is ready to run":
             logging.info("Machine Status validated: let's get the machine name")
@@ -88,6 +92,9 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
             g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
             if g_code_sender_status == 'Finished':
                 logging.info("Finishing job.")
+                machine_actuators = run_machine_actuators(broker_address, False)
+                print(machine_actuators)
+                del machine_actuators
                 g_code_sender.close_serial_connection()
         else:
             raise Exception(" Problem to connect to machine ")
