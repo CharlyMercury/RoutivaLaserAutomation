@@ -45,7 +45,7 @@ class MachineActuators:
                                       broker_port=broker_port,
                                       on_message_callback=self.on_message_callback)
         self.mqtt_client.connect()
-        self.mqtt_client.subscribe(TOPICS)
+        # self.mqtt_client.subscribe(TOPICS)
         self.publishing_request = False
         self.decoded_message = tuple
 
@@ -96,5 +96,6 @@ def run_machine_actuators(broker_server_address: str, actuators_state: bool = Fa
     machine_actuators.turn_on_off_led_lights(actuators_state)
 
     machine_status_message_ = "Actuators Functioning Correctly"
+    machine_actuators.mqtt_client.disconnect()
 
     return machine_status_message_
