@@ -11,7 +11,6 @@ esp.osdebug(None)
 import gc
 gc.collect()
 # Complete project details at https://RandomNerdTutorials.com/micropython-hc-sr04-ultrasonic-esp32-esp8266/
-from hcsr04 import HCSR04
 from time import sleep
 
 ssid = 'INFINITUM2A5B_2.4'
