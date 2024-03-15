@@ -51,7 +51,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
         'port': '',
         'baud_rate': 0
     }
-    machine_status = ''
+    machine_status = 'machine is ready to run'
     broker_address = '192.168.1.192'  # 'broker.hivemq.com'
     machine_actuators = run_machine_actuators(broker_address, False)
     print(machine_actuators)
@@ -60,7 +60,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
         machine_actuators = run_machine_actuators(broker_address, True)
         print(machine_actuators)
         del machine_actuators
-        machine_status = run_machine_status(broker_address)
+        # machine_status = run_machine_status(broker_address)
         if machine_status == "machine is ready to run":
             logging.info("Machine Status validated: let's get the machine name")
     except Exception as err:
