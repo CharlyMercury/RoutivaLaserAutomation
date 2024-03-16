@@ -60,24 +60,26 @@ class MachineActuators:
         """
         print(msg)
 
-    def pub_message(self, destination: str, status: bool = False):
+    def pub_message(self, destination: str, topic: str, status: bool = False):
         """
         Method to publish a message to a specific topic
 
+        :param topic: topic to send mqtt
         :param status: status of the actuator
         :param destination: name of the characteristic to be validated
         :return:
         """
         message = {destination: {'source': 'raspberry', 'status': status}}
-        topic = f"machine_status/{destination}"
         self.mqtt_client.publish(topic, json.dumps(message))
         logging.info(f'Topic: {topic}. Message sent to esp32: {message}')
 
-    def turn_on_off_extractor(self, state):
-        self.pub_message("smoke_extractor", state)
+    def turn_on_off_extractor(self, state_):
+        topic_ = "machine_status/smoke_extractor_actuator"
+        self.pub_message(destination="smoke_extractor", topic=topic_, status=state_)
 
-    def turn_on_off_led_lights(self, state):
-        self.pub_message("leds_lights", state)
+    def turn_on_off_led_lights(self, state_):
+        topic_ = "machine_status/leds_lights"
+        self.pub_message(destination="smoke_extractor", topic=topic_, status=state_)
 
 
 def run_machine_actuators(broker_server_address: str, actuators_state: bool = False):

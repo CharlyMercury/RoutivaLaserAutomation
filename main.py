@@ -98,9 +98,9 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
             if g_code_sender_status == 'Finished':
                 logging.info("Finishing job.")
                 time.sleep(1)
-                machine_actuators.turn_on_off_extractor(True)
+                machine_actuators.turn_on_off_extractor(False)
                 time.sleep(1)
-                machine_actuators.turn_on_off_led_lights(True)
+                machine_actuators.turn_on_off_led_lights(False)
                 g_code_sender.close_serial_connection()
         else:
             raise Exception(" Problem to connect to machine ")
