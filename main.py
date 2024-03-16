@@ -53,10 +53,10 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
     }
     machine_status = 'machine is ready to run'
     broker_address = '192.168.1.192'  # 'broker.hivemq.com'
-    machine_actuators = run_machine_actuators(broker_address, False)
-    print(machine_actuators)
 
     try:
+        machine_actuators = run_machine_actuators(broker_address, False)
+        print(machine_actuators)
         machine_actuators = run_machine_actuators(broker_address, True)
         print(machine_actuators)
         # machine_status = run_machine_status(broker_address)
@@ -90,7 +90,8 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
         if laser_status:
             time.sleep(4)
             logging.info(f"Sending Gcode to machine: {g_code_file_}")
-            g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
+            # g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
+            g_code_sender_status = 'Finished'
             if g_code_sender_status == 'Finished':
                 logging.info("Finishing job.")
                 machine_actuators = run_machine_actuators(broker_address, False)
