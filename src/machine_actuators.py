@@ -58,7 +58,6 @@ class MachineActuators:
         :param msg: incoming message
         :return:
         """
-        print(msg)
 
     def pub_message(self, destination: str, topic: str, status: bool = False):
         """
@@ -79,7 +78,7 @@ class MachineActuators:
 
     def turn_on_off_led_lights(self, state_):
         topic_ = "machine_status/leds_lights"
-        self.pub_message(destination="smoke_extractor", topic=topic_, status=state_)
+        self.pub_message(destination="leds_lights", topic=topic_, status=state_)
 
 
 def run_machine_actuators(broker_server_address: str, actuators_state: bool = False):
