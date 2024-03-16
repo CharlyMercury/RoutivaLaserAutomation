@@ -90,12 +90,3 @@ def run_machine_actuators(broker_server_address: str, actuators_state: bool = Fa
     :param broker_server_address: address of the mqtt broker
     :return:
     """
-
-    machine_actuators = MachineActuators(broker_server_address, broker_port=1883)
-    machine_actuators.turn_on_off_extractor(actuators_state)
-    machine_actuators.turn_on_off_led_lights(actuators_state)
-
-    machine_status_message_ = "Actuators Functioning Correctly"
-    machine_actuators.mqtt_client.disconnect()
-
-    return machine_status_message_
