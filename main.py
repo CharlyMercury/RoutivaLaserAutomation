@@ -58,9 +58,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
     machine_actuators.turn_on_off_led_lights(False)
 
     try:
-        time.sleep(1)
         machine_actuators.turn_on_off_extractor(True)
-        time.sleep(1)
         machine_actuators.turn_on_off_led_lights(True)
         # machine_status = run_machine_status(broker_address)
         if machine_status == "machine is ready to run":
@@ -97,9 +95,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
             g_code_sender_status = 'Finished'
             if g_code_sender_status == 'Finished':
                 logging.info("Finishing job.")
-                time.sleep(1)
                 machine_actuators.turn_on_off_extractor(False)
-                time.sleep(1)
                 machine_actuators.turn_on_off_led_lights(False)
                 g_code_sender.close_serial_connection()
         else:

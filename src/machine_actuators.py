@@ -58,8 +58,9 @@ class MachineActuators:
         :param msg: incoming message
         :return:
         """
+        print(msg.topic, msg.payload)
 
-    def pub_message(self, destination: str, topic: str, status: bool = False):
+    def pub_message(self, destination: str, topic: str, status: bool):
         """
         Method to publish a message to a specific topic
 
