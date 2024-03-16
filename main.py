@@ -91,7 +91,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
         if laser_status:
             time.sleep(4)
             logging.info(f"Sending Gcode to machine: {g_code_file_}")
-            # g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
+            g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
             g_code_sender_status = 'Finished'
             if g_code_sender_status == 'Finished':
                 logging.info("Finishing job.")
