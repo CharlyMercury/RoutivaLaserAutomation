@@ -45,9 +45,7 @@ class MachineActuators:
                                       broker_port=broker_port,
                                       on_message_callback=self.on_message_callback)
         self.mqtt_client.connect()
-        # self.mqtt_client.subscribe(TOPICS)
-        self.publishing_request = False
-        self.decoded_message = tuple
+        self.mqtt_client.subscribe(TOPICS)
 
     def on_message_callback(self, client, userdata, msg):
         """
@@ -60,6 +58,7 @@ class MachineActuators:
         :param msg: incoming message
         :return:
         """
+        print(msg)
 
     def pub_message(self, destination: str, status: bool = False):
         """
@@ -75,7 +74,7 @@ class MachineActuators:
         logging.info(f'Topic: {topic}. Message sent to esp32: {message}')
 
     def turn_on_off_extractor(self, state):
-        self.pub_message("smoke_extractor_actuator", state)
+        self.pub_message("smoke_extractor", state)
 
     def turn_on_off_led_lights(self, state):
         self.pub_message("leds_lights", state)
