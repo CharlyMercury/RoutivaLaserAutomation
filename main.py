@@ -3,6 +3,8 @@
      of cutting and engraving MDF with a laser machine
 
     The project is composed of the following components:
+        - A module/function called machine_actuators/MachineActuators, which turn on/off
+        the actuators present in the laser machine.
         - A module/function called machine_status/run_machine_status, which validates several
         characteristics before sending the laser to cut.
         - A module/function called identify_laser_machine/identifying_laser_board, which returns
@@ -54,12 +56,10 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
     machine_status = 'machine is ready to run'
     broker_address = '192.168.1.192'  # 'broker.hivemq.com'
     machine_actuators = MachineActuators(broker_address, broker_port=1883)
-    machine_actuators.turn_on_off_extractor(False)
-    machine_actuators.turn_on_off_led_lights(False)
+    machine_actuators.turn_on_off_actuators(False)
 
     try:
-        machine_actuators.turn_on_off_extractor(True)
-        machine_actuators.turn_on_off_led_lights(True)
+        machine_actuators.turn_on_off_actuators(True)
         # machine_status = run_machine_status(broker_address)
         if machine_status == "machine is ready to run":
             logging.info("Machine Status validated: let's get the machine name")
@@ -95,8 +95,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
             
             if g_code_sender_status == 'Finished':
                 logging.info("Finishing job.")
-                machine_actuators.turn_on_off_extractor(False)
-                machine_actuators.turn_on_off_led_lights(False)
+                machine_actuators.turn_on_off_actuators(False)
                 g_code_sender.close_serial_connection()
         else:
             raise Exception(" Problem to connect to machine ")

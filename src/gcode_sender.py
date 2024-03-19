@@ -39,7 +39,6 @@ class GcodeSender:
 
     def send_g_code(self, gcode_path: str):
         g_code_data = open(gcode_path, 'r')
-
         print('Wake up machine')
         self.__wake_up_machine()
         print('Sending Laser Machine to Home')
@@ -47,12 +46,10 @@ class GcodeSender:
 
         print('Sending GCode')
         for g_code_command in g_code_data:
-
             if ';' in g_code_command:
                 print(g_code_command)
             else:
                 self.__send_g_code_command(command=g_code_command)
-
         return 'Finished'
 
     def close_serial_connection(self):

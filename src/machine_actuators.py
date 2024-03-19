@@ -73,13 +73,17 @@ class MachineActuators:
         self.mqtt_client.publish(topic, json.dumps(message))
         logging.info(f'Topic: {topic}. Message sent to esp32: {message}')
 
-    def turn_on_off_extractor(self, state_):
+    def turn_on_off_extractor(self, __state_):
         topic_ = "machine_status/smoke_extractor_actuator"
-        self.pub_message(destination="smoke_extractor", topic=topic_, status=state_)
+        self.pub_message(destination="smoke_extractor", topic=topic_, status=__state_)
 
-    def turn_on_off_led_lights(self, state_):
+    def turn_on_off_led_lights(self, __state_):
         topic_ = "machine_status/leds_lights"
-        self.pub_message(destination="leds_lights", topic=topic_, status=state_)
+        self.pub_message(destination="leds_lights", topic=topic_, status=__state_)
+
+    def turn_on_off_actuators(self, state_):
+        self.turn_on_off_extractor(state_)
+        self.turn_on_off_led_lights(state_)
 
 
 def run_machine_actuators(broker_server_address: str, actuators_state: bool = False):
