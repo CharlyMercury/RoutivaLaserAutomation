@@ -1,6 +1,8 @@
 """
 
-In Raspberry, I have the following configuration in
+    This class manages exchange of data with a mqtt broker.
+
+In Raspberry, For Local mqtt broker I have the following configuration in
 
     - $ sudo nano /etc/mosquitto/mosquitto.conf
 
@@ -31,8 +33,20 @@ import paho.mqtt.client as mqtt
 
 
 class MqttClient:
+    """
+        Mqtt client
+    """
 
     def __init__(self, broker_address, broker_port: int = 1883, username=None, password=None, on_message_callback=None):
+        """
+        We have the following parameters for the class constructor.
+
+        :param broker_address: address of the broker
+        :param broker_port:  port of the broker
+        :param username: username if exists
+        :param password: password of user
+        :param on_message_callback: function for mqtt subscriptions
+        """
         self.client = mqtt.Client(client_id="raspberry")
         self.broker_address = broker_address
         self.broker_port = broker_port
@@ -40,27 +54,52 @@ class MqttClient:
         self.password = password
 
         # Set callbacks
-        self.client.on_connect = self.on_connect
-        self.client.on_disconnect = self.on_disconnect
+        self.client.on_connect = self.__on_connect__
+        self.client.on_disconnect = self.__on_disconnect__
 
         # Set on_message callback dynamically
         if on_message_callback:
             self.client.on_message = on_message_callback
         else:
-            self.client.on_message = self.default_on_message
+            self.client.on_message = self.__default_on_message__
 
         self.client_id = None
 
-    def on_connect(self, client, userdata, flags, rc):
+    def __on_connect__(self, client, userdata, flags, rc):
+        """
+        Mqtt Client initializing method.
+
+        :param client:
+        :param userdata:
+        :param flags:
+        :param rc:
+        :return:
+        """
         print(self.validate_connection)
         print(f"Connected with result code {rc}")
         self.client_id = client._client_id.decode()
 
-    def on_disconnect(self, client, userdata, rc):
+    def __on_disconnect__(self, client, userdata, rc):
+        """
+        Mqtt Client finalizing method.
+
+        :param client:
+        :param userdata:
+        :param rc:
+        :return:
+        """
         print(self.validate_connection)
         print(f"Disconnected with result code {rc}")
 
-    def default_on_message(self, client, userdata, msg):
+    def __default_on_message__(self, client, userdata, msg):
+        """
+        Default method for subscribing topics.
+
+        :param client:
+        :param userdata:
+        :param msg:
+        :return:
+        """
         if msg.topic == f"your/topic/{self.client_id}":
             print("Ignoring message sent by this client.")
             return
@@ -68,25 +107,58 @@ class MqttClient:
         print(f"Received message on topic {msg.topic}: {msg.payload.decode()}")
 
     def connect(self):
+        """
+        Connection Method
+
+        :return:
+        """
         if self.username and self.password:
             self.client.username_pw_set(self.username, self.password)
         self.client.connect(self.broker_address, self.broker_port, 60)
         self.client.loop_start()
 
     def disconnect(self):
-        self.client.disconnect()
+        """
+        Disconnection Method
+
+        :return:
+        """
+        self.client.on_disconnect(self.client, self.client._userdata, 0)
 
     def publish(self, topic, message):
+        """
+        Publishing Method
+
+        :param topic:
+        :param message:
+        :return:
+        """
         self.client.publish(topic, message)
 
     def subscribe(self, topics):
+        """
+        Subscribing Method
+
+        :param topics:
+        :return:
+        """
         for topic in topics:
             self.client.subscribe(topic)
 
     def validate_connection(self):
+        """
+        Validationg Method of mqtt conection
+
+        :return:
+        """
         return self.client.is_connected()
 
     def get_client_id(self):
+        """
+        Client Id Method
+
+        :return:
+        """
         return self.client.client_id
 
 
