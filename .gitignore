@@ -1,10 +1,13 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
+### gcode ###
+*.gcode
+
 
 ### Google Keys ###
 client_secrets*
-mycreds.json
+src/google_drive_code/my_creds.json
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
