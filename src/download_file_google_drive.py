@@ -46,19 +46,19 @@ class GoogleDriveUtilities:
                     self.file_id = file['id']
                     file.GetContentFile(file['title'])
                     os.rename(file_name_, f'./gcodes/{file_name_}')
-                    return True
+                    return True, "Download Successfully"
                 except Exception as err:
                     print(err)
-                    return False
+                    return False, err
 
     def remove_file_gdrive(self):
         try:
             file = self.drive.CreateFile({'id': self.file_id})
             file.Delete()
-            return True
+            return True, "Removed Successfully"
         except Exception as err:
             print(err)
-            return False
+            return False, err
 
     def create_token_file(self, cred_token):
         with open("./src/google_drive_code/my_creds.json", "w") as outfile:
@@ -68,6 +68,7 @@ class GoogleDriveUtilities:
     def delete_token_file(self):
         os.remove("./src/google_drive_code/my_creds.json")
         self.cred_token_write = False
+
 
 """folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'
 file_name = 'pedido_31_ago.gcode'

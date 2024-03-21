@@ -27,18 +27,23 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
 
     if msg_incoming_data["machine_name"] in machine_names:
         if msg_incoming_data["mdf_type"] in mdf_types:
-            if msg_incoming_data["cutting_file"] != "":
+            if msg_incoming_data["file_name"] != "":
                 if msg_incoming_data["folder_id"] != "":
+
                     print("downloading_file")
 
-                    folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'
-                    file_name = 'pedido_31_ago.gcode'
+                    folder_id = msg_incoming_data["folder_id"]
+                    file_name = msg_incoming_data['file_name']
                     google_drive_ = GoogleDriveUtilities(folder_id)
-                    google_drive_.download_file(file_name)
-                    google_drive_.remove_file_gdrive()
+                    download_status, download_message = google_drive_.download_file(file_name)
+                    remove_status, remove_message = google_drive_.remove_file_gdrive()
 
-                    validation_status = True
-                    validation_error = "No errors"
+                    if download_status and remove_status:
+                        validation_status = True
+                        validation_error = "No errors"
+                    else:
+                        validation_status = False
+                        validation_error = f"{download_message}, {remove_message}"
                 else:
                     validation_status = False
                     validation_error = "Wrong file url"
