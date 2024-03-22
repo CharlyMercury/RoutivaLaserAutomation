@@ -77,7 +77,7 @@ class MqttClient:
         """
         print(self.validate_connection)
         print(f"Connected with result code {rc}")
-        self.client_id = client._client_id.decode()
+        # self.client_id = client._client_id.decode()
 
     def __on_disconnect__(self, client, userdata, rc):
         """
@@ -106,16 +106,23 @@ class MqttClient:
         print(self.validate_connection)
         print(f"Received message on topic {msg.topic}: {msg.payload.decode()}")
 
-    def connect(self):
+    def connect(self, type_of_connection: str = 'loop_start', topics=None):
         """
         Connection Method
 
         :return:
         """
+        if topics is None:
+            topics = []
         if self.username and self.password:
             self.client.username_pw_set(self.username, self.password)
         self.client.connect(self.broker_address, self.broker_port, 60)
-        self.client.loop_start()
+        if type_of_connection == 'loop_start':
+            self.client.loop_start()
+        elif type_of_connection == 'loop_forever':
+            print("Loop forever")
+            self.subscribe(topics)
+            self.client.loop_forever()
 
     def disconnect(self):
         """
@@ -143,6 +150,7 @@ class MqttClient:
         :return:
         """
         for topic in topics:
+            print(f"Subscribing to {topics}")
             self.client.subscribe(topic)
 
     def validate_connection(self):

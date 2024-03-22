@@ -24,6 +24,7 @@ from src.machine_status import run_machine_status
 from src.machine_actuators import MachineActuators
 from src.identify_laser_machine import identifying_laser_board
 from src.gcode_sender import GcodeSender
+from src.mqtt_server_client import MqttServerBrokerClient
 
 
 # Get the current date and time
@@ -55,6 +56,9 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
     }
     machine_status = 'machine is ready to run'
     broker_address = '192.168.1.192'  # 'broker.hivemq.com'
+
+    # mqtt_client = MqttServerBrokerClient(broker_address, 1883)
+
     machine_actuators = MachineActuators(broker_address, broker_port=1883)
     machine_actuators.turn_on_off_actuators(False)
 
