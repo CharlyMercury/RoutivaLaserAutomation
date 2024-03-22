@@ -6,7 +6,8 @@ import json
 
 class GoogleDriveUtilities:
 
-    def __init__(self, folder_id_):
+    def __init__(self, folder_id_, credentials_):
+        self.create_token_file(credentials_)
         self.cred_token_write = False
         self.gauth = GoogleAuth()
         self.gauth.LoadCredentialsFile("./src/google_drive_code/my_creds.json")
@@ -70,9 +71,34 @@ class GoogleDriveUtilities:
         self.cred_token_write = False
 
 
-"""folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'
+credentials = {
+  "access_token": "ya29.a0Ad52N39FPIly7SfyGzckS25yYgm6_ZaDE2IBmhj_Pbksu0TmJOxXVeWZPOq8VDsxq4c_VdbFc8rYJXFaONrtzAWl3P3zWerTgQVejq-pWhij6nctpOftDwU_pEDLtc3tPdQCPo_cpdNrgpVVH-skugsDtnxTLnc7WV0vaCgYKAfESARASFQHGX2Mi42C2Cgpdt3lJ92ROtYr_5A0171",
+  "client_id": "965793021308-sim1mdfeke46riovdc6kg4pl5mtmntt3.apps.googleusercontent.com",
+  "client_secret": "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",
+  "refresh_token": "1//0f9aBDF0SNUqoCgYIARAAGA8SNwF-L9IrK7oHGXS5sCwwsblyhFdc8O2KEwC5NJ2zzT2_7Wv8hsVr4R1D_OZNBxIvw4ros4g7Loo",
+  "token_expiry": "2024-03-22T16:58:19Z",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "user_agent": None,
+  "revoke_uri": "https://oauth2.googleapis.com/revoke",
+  "id_token": None,
+  "id_token_jwt": None,
+  "token_response": {
+    "access_token": "ya29.a0Ad52N39FPIly7SfyGzckS25yYgm6_ZaDE2IBmhj_Pbksu0TmJOxXVeWZPOq8VDsxq4c_VdbFc8rYJXFaONrtzAWl3P3zWerTgQVejq-pWhij6nctpOftDwU_pEDLtc3tPdQCPo_cpdNrgpVVH-skugsDtnxTLnc7WV0vaCgYKAfESARASFQHGX2Mi42C2Cgpdt3lJ92ROtYr_5A0171",
+    "expires_in": 3599,
+    "refresh_token": "1//0f9aBDF0SNUqoCgYIARAAGA8SNwF-L9IrK7oHGXS5sCwwsblyhFdc8O2KEwC5NJ2zzT2_7Wv8hsVr4R1D_OZNBxIvw4ros4g7Loo",
+    "scope": "https://www.googleapis.com/auth/drive",
+    "token_type": "Bearer"
+  },
+  "scopes": [
+    "https://www.googleapis.com/auth/drive"
+  ],
+  "token_info_uri": "https://oauth2.googleapis.com/tokeninfo",
+  "invalid": False,
+  "_class": "OAuth2Credentials",
+  "_module": "oauth2client.client"
+}
+folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'
 file_name = 'pedido_31_ago.gcode'
-google_drive_ = GoogleDriveUtilities(folder_id)
+google_drive_ = GoogleDriveUtilities(folder_id, credentials)
 print(google_drive_.download_file(file_name))
 print(google_drive_.remove_file_gdrive())
-"""

@@ -34,6 +34,31 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
 
                     folder_id = msg_incoming_data["folder_id"]
                     file_name = msg_incoming_data['file_name']
+                    credentials = {
+                        "access_token": "ya29.a0Ad52N38xPnp4mzG-tUDonf7perSw7tTTu5XOddo3MdyQQtA8PXRKiaqSfE-3L7v0jg68-hn6gYyjiYoevevNBCCcBYr9_Wva_hwa12wjX4YP8UKh5k7KHMCGbHc9yK1R98astgkZ8ZMOQupmjSzSEtPXsffNB4YuxPsQzQaCgYKAeUSARASFQHGX2Mirg3QtXC9DoSQYY86X6OKxA0173",
+                        "client_id": "965793021308-sim1mdfeke46riovdc6kg4pl5mtmntt3.apps.googleusercontent.com",
+                        "client_secret": "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",
+                        "refresh_token": "1//0f83l3wzz19Y_CgYIARAAGA8SNwF-L9IraumW8oRwNH88M5M90qpqfx0IWewxrsqG-t7KlIyAjjzNkkQ_8rcqapeWFVmdZrC72L0",
+                        "token_expiry": "2024-03-21T22:43:21Z",
+                        "token_uri": "https://oauth2.googleapis.com/token",
+                        "user_agent": null,
+                        "revoke_uri": "https://oauth2.googleapis.com/revoke",
+                        "id_token": null,
+                        "id_token_jwt": null,
+                        "token_response": {
+                            "access_token": "ya29.a0Ad52N38xPnp4mzG-tUDonf7perSw7tTTu5XOddo3MdyQQtA8PXRKiaqSfE-3L7v0jg68-hn6gYyjiYoevevNBCCcBYr9_Wva_hwa12wjX4YP8UKh5k7KHMCGbHc9yK1R98astgkZ8ZMOQupmjSzSEtPXsffNB4YuxPsQzQaCgYKAeUSARASFQHGX2Mirg3QtXC9DoSQYY86X6OKxA0173",
+                            "expires_in": 3599,
+                            "scope": "https://www.googleapis.com/auth/drive",
+                            "token_type": "Bearer"
+                        },
+                        "scopes": [
+                            "https://www.googleapis.com/auth/drive"
+                        ],
+                        "token_info_uri": "https://oauth2.googleapis.com/tokeninfo",
+                        "invalid": false,
+                        "_class": "OAuth2Credentials",
+                        "_module": "oauth2client.client"
+                    }
                     google_drive_ = GoogleDriveUtilities(folder_id)
                     download_status, download_message = google_drive_.download_file(file_name)
                     remove_status, remove_message = google_drive_.remove_file_gdrive()
