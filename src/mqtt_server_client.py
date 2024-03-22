@@ -34,20 +34,22 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
 
                     folder_id = msg_incoming_data["folder_id"]
                     file_name = msg_incoming_data['file_name']
+
                     credentials = {
-                        "access_token": "ya29.a0Ad52N38xPnp4mzG-tUDonf7perSw7tTTu5XOddo3MdyQQtA8PXRKiaqSfE-3L7v0jg68-hn6gYyjiYoevevNBCCcBYr9_Wva_hwa12wjX4YP8UKh5k7KHMCGbHc9yK1R98astgkZ8ZMOQupmjSzSEtPXsffNB4YuxPsQzQaCgYKAeUSARASFQHGX2Mirg3QtXC9DoSQYY86X6OKxA0173",
+                        "access_token": "ya29.a0Ad52N39FPIly7SfyGzckS25yYgm6_ZaDE2IBmhj_Pbksu0TmJOxXVeWZPOq8VDsxq4c_VdbFc8rYJXFaONrtzAWl3P3zWerTgQVejq-pWhij6nctpOftDwU_pEDLtc3tPdQCPo_cpdNrgpVVH-skugsDtnxTLnc7WV0vaCgYKAfESARASFQHGX2Mi42C2Cgpdt3lJ92ROtYr_5A0171",
                         "client_id": "965793021308-sim1mdfeke46riovdc6kg4pl5mtmntt3.apps.googleusercontent.com",
                         "client_secret": "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",
-                        "refresh_token": "1//0f83l3wzz19Y_CgYIARAAGA8SNwF-L9IraumW8oRwNH88M5M90qpqfx0IWewxrsqG-t7KlIyAjjzNkkQ_8rcqapeWFVmdZrC72L0",
-                        "token_expiry": "2024-03-21T22:43:21Z",
+                        "refresh_token": "1//0f9aBDF0SNUqoCgYIARAAGA8SNwF-L9IrK7oHGXS5sCwwsblyhFdc8O2KEwC5NJ2zzT2_7Wv8hsVr4R1D_OZNBxIvw4ros4g7Loo",
+                        "token_expiry": "2024-03-22T16:58:19Z",
                         "token_uri": "https://oauth2.googleapis.com/token",
-                        "user_agent": null,
+                        "user_agent": None,
                         "revoke_uri": "https://oauth2.googleapis.com/revoke",
-                        "id_token": null,
-                        "id_token_jwt": null,
+                        "id_token": None,
+                        "id_token_jwt": None,
                         "token_response": {
-                            "access_token": "ya29.a0Ad52N38xPnp4mzG-tUDonf7perSw7tTTu5XOddo3MdyQQtA8PXRKiaqSfE-3L7v0jg68-hn6gYyjiYoevevNBCCcBYr9_Wva_hwa12wjX4YP8UKh5k7KHMCGbHc9yK1R98astgkZ8ZMOQupmjSzSEtPXsffNB4YuxPsQzQaCgYKAeUSARASFQHGX2Mirg3QtXC9DoSQYY86X6OKxA0173",
+                            "access_token": "ya29.a0Ad52N39FPIly7SfyGzckS25yYgm6_ZaDE2IBmhj_Pbksu0TmJOxXVeWZPOq8VDsxq4c_VdbFc8rYJXFaONrtzAWl3P3zWerTgQVejq-pWhij6nctpOftDwU_pEDLtc3tPdQCPo_cpdNrgpVVH-skugsDtnxTLnc7WV0vaCgYKAfESARASFQHGX2Mi42C2Cgpdt3lJ92ROtYr_5A0171",
                             "expires_in": 3599,
+                            "refresh_token": "1//0f9aBDF0SNUqoCgYIARAAGA8SNwF-L9IrK7oHGXS5sCwwsblyhFdc8O2KEwC5NJ2zzT2_7Wv8hsVr4R1D_OZNBxIvw4ros4g7Loo",
                             "scope": "https://www.googleapis.com/auth/drive",
                             "token_type": "Bearer"
                         },
@@ -55,12 +57,14 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
                             "https://www.googleapis.com/auth/drive"
                         ],
                         "token_info_uri": "https://oauth2.googleapis.com/tokeninfo",
-                        "invalid": false,
+                        "invalid": False,
                         "_class": "OAuth2Credentials",
                         "_module": "oauth2client.client"
                     }
-                    google_drive_ = GoogleDriveUtilities(folder_id)
+
+                    google_drive_ = GoogleDriveUtilities(folder_id, credentials)
                     download_status, download_message = google_drive_.download_file(file_name)
+                    google_drive_.delete_token_file()
                     remove_status, remove_message = google_drive_.remove_file_gdrive()
 
                     if download_status and remove_status:
