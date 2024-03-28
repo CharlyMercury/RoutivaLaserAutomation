@@ -2,6 +2,7 @@ from src.mqtt_client import MqttClient
 from src.download_file_google_drive import GoogleDriveUtilities
 import json
 
+global file_name, laser_machine
 
 machine_names = [
     'sculpfun_s9_proofs',
@@ -30,7 +31,7 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
             if msg_incoming_data["file_name"] != "":
                 if msg_incoming_data["folder_id"] != "":
 
-                    print("downloading_file")
+                    print("Downloading File from Google Drive")
 
                     folder_id = msg_incoming_data["folder_id"]
                     file_name = msg_incoming_data['file_name']
@@ -76,12 +77,18 @@ class MqttServerBrokerClient:
                                       broker_port=broker_port,
                                       on_message_callback=self.on_message_callback)
         self.mqtt_client.connect('loop_forever', topics=subscribing_topics)
+        self.file_name = ''
+        self.laser_machine = ''
 
     def on_message_callback(self, client, userdata, msg):
+
+        global file_name, laser_machine
 
         if msg.topic == 'routiva_server/trigger_cutting':
 
             message_in = json.loads(msg.payload.decode())
+            file_name = message_in['file_name']
+            laser_machine = message_in['machine_name']
             validation_status, validation_error = validating_coming_information(message_in)
 
             if validation_status and validation_error == "No errors":
@@ -93,3 +100,8 @@ class MqttServerBrokerClient:
         if msg.topic == 'routiva_server/confirmation_status_machine':
 
             print('')
+
+    def return_parameters_(self):
+        global file_name, laser_machine
+        self.file_name = file_name
+        self.laser_machine = laser_machine

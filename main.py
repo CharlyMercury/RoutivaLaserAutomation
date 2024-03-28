@@ -41,7 +41,7 @@ logging.basicConfig(
 )
 
 
-def run(g_code_file_: str, laser_machine_: str) -> None:
+def run() -> None:
     """
     Main function.
 
@@ -58,6 +58,9 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
     broker_address = '192.168.0.192'  # 'broker.hivemq.com'
 
     mqtt_client = MqttServerBrokerClient(broker_address, 1883)
+    mqtt_client.return_parameters_()
+    file_path = f"gcodes/{mqtt_client.file_name}"
+    laser_machine_ = mqtt_client.laser_machine
     time.sleep(1)
 
     machine_actuators = MachineActuators(broker_address, broker_port=1883)
@@ -73,6 +76,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
 
     try:
         if machine_status == "machine is ready to run":
+            print(machine_status)
             laser_machine_parameters = identifying_laser_board(laser_machine_)
             logging.info(f"Machine Name: {laser_machine_parameters}")
         else:
@@ -95,11 +99,13 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
 
         if laser_status:
             time.sleep(4)
-            logging.info(f"Sending Gcode to machine: {g_code_file_}")
-            g_code_sender_status = g_code_sender.send_g_code(gcode_path=g_code_file_)
-            
+            logging.info(f"Sending Gcode to machine: {file_path}")
+            print(file_path)
+            g_code_sender_status = g_code_sender.send_g_code(gcode_path=file_path)
+
             if g_code_sender_status == 'Finished':
                 logging.info("Finishing job.")
+                os.remove("./gcodes/Corte.gcode")
                 machine_actuators.turn_on_off_actuators(False)
                 g_code_sender.close_serial_connection()
         else:
@@ -109,7 +115,4 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
 
 
 if __name__ == "__main__":
-    new_file = 'example_3_cajita_6_6'
-    g_code_file = f"examples/{new_file}.gcode"
-    laser_machine = 'sculpfun_s9_proofs'
-    run(g_code_file, laser_machine)
+    run()

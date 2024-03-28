@@ -151,3 +151,8 @@ KERNELS=="1-1.3:1.0", SYMLINK+="sculpfun_s9_proofs"
 ```bash
 sudo udevadm trigger
 ```
+
+
+### Copy files from Windows to Linux ###
+
+1. scp .\client_secrets.json routiva@192.168.0.192:~
