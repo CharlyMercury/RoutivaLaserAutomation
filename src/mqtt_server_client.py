@@ -71,6 +71,7 @@ laser_machine = ''
 class MqttServerBrokerClient:
 
     def __init__(self, mqtt_broker_address, broker_port):
+        global file_name, laser_machine
         """
         Constructor of the class
 
