@@ -2,9 +2,6 @@ from src.mqtt_client import MqttClient
 from src.download_file_google_drive import GoogleDriveUtilities
 import json
 
-
-global file_name_archive, laser_machine
-
 machine_names = [
     'sculpfun_s9_proofs',
     'sculpfun_s30_90_90',
@@ -25,32 +22,8 @@ publishing_topics = {
 }
 
 
-def on_message_callback_server(client, userdata, msg):
-    global file_name_archive, laser_machine
-
-    print(msg.topic, msg.payload.decode())
-
-    if msg.topic == 'routiva_server/trigger_cutting':
-
-        message_in = json.loads(msg.payload.decode())
-        file_name_archive = message_in['file_name']
-        laser_machine = message_in['machine_name']
-        validation_status, validation_error = validating_coming_information(message_in)
-
-        if validation_status and validation_error == "No errors":
-            pass
-            # self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], "Initializing Cutting Process")
-            # self.mqtt_client.disconnect_client()
-        if not validation_status:
-            pass
-            # self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], validation_error)
-
-    if msg.topic == 'routiva_server/confirmation_status_machine':
-        print('')
-
-
 def validating_coming_information(msg_incoming_data: dict) -> tuple:
-    global file_name_archive, laser_machine
+    global file_name, laser_machine
 
     if msg_incoming_data["machine_name"] in machine_names:
         if msg_incoming_data["mdf_type"] in mdf_types:
@@ -60,11 +33,11 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
                     print("Downloading File from Google Drive")
 
                     folder_id = msg_incoming_data["folder_id"]
-                    file_name_archive = msg_incoming_data['file_name']
+                    file_name = msg_incoming_data['file_name']
                     credentials = msg_incoming_data['credentials']
 
                     google_drive_ = GoogleDriveUtilities(folder_id, credentials)
-                    download_status, download_message = google_drive_.download_file(file_name_archive)
+                    download_status, download_message = google_drive_.download_file(file_name)
                     google_drive_.delete_token_file()
                     remove_status, remove_message = google_drive_.remove_file_gdrive()
 
@@ -90,6 +63,9 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
     return validation_status, validation_error
 
 
+global file_name, laser_machine
+
+
 class MqttServerBrokerClient:
 
     def __init__(self, mqtt_broker_address, broker_port):
@@ -104,21 +80,30 @@ class MqttServerBrokerClient:
         self.mqtt_client = MqttClient(broker_address=mqtt_broker_address,
                                       broker_port=broker_port,
                                       on_message_callback=self.on_message_callback)
-        self.mqtt_client.connect(type_of_connection='loop_forever', topics=subscribing_topics)
+        self.mqtt_client.connect('loop_forever', topics=subscribing_topics)
 
     def on_message_callback(self, client, userdata, msg):
-        """
-        The method is invoked when a message is received on a subscribed topic.
 
-        If the msg contains information of a characteristics, then is validated the information.
+        global file_name, laser_machine
 
-        :param client:
-        :param userdata:
-        :param msg: incoming message
-        :return:
-        """
-        print(msg.topic, msg.payload)
+        if msg.topic == 'routiva_server/trigger_cutting':
+
+            message_in = json.loads(msg.payload.decode())
+            file_name = message_in['file_name']
+            laser_machine = message_in['machine_name']
+            validation_status, validation_error = validating_coming_information(message_in)
+
+            if validation_status and validation_error == "No errors":
+                self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], "Initializing Cutting Process")
+                self.mqtt_client.disconnect_client()
+            if not validation_status:
+                self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], validation_error)
+
+        if msg.topic == 'routiva_server/confirmation_status_machine':
+
+            print('')
 
     def return_parameters_(self):
-        self.file_name = file_name_archive
+        global file_name, laser_machine
+        self.file_name = file_name
         self.laser_machine = laser_machine

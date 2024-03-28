@@ -5,7 +5,7 @@ import json
 import os
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
-from mqtt_client import MqttClient
+from src.mqtt_client import MqttClient
 
 """# Below code does the authentication
 # part of the code
@@ -69,14 +69,13 @@ with open('./src/google_drive_code/my_creds.json', 'r') as file:
     credentials_dict = json.load(file)
 
 topic_to_publish = "routiva_server/trigger_cutting"
-"""message_to_publish = {
+message_to_publish = {
     'machine_name': 'sculpfun_s30_90_90',
     'file_name': 'Corte.gcode',
     'mdf_type': 'natural_mdf',
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
-    'credentials': credentials_dict}"""
-message_to_publish = b"HOLA"
-message_to_publish_encoded = message_to_publish
+    'credentials': credentials_dict}
+
 mqtt_client = MqttClient(broker_address='192.168.1.192', broker_port=1883)
-mqtt_client.connect('loop_start', 'routiva_server')
-mqtt_client.publish(topic_to_publish, message_to_publish_encoded)
+mqtt_client.connect()
+mqtt_client.publish(topic_to_publish, json.dumps(message_to_publish))
