@@ -34,9 +34,8 @@ class GcodeSender:
         self.serial_connection.flushInput()
 
     def __send_home_machine(self):
-        pass
-        # send_home_g_code = '$H'
-        # self.__send_g_code_command(command=send_home_g_code)
+        send_home_g_code = '$H'
+        self.__send_g_code_command(command=send_home_g_code)
 
     def send_g_code(self, gcode_path: str):
         g_code_data = open(gcode_path, 'r')
