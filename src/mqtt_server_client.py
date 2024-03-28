@@ -25,6 +25,7 @@ publishing_topics = {
 
 
 def validating_coming_information(msg_incoming_data: dict) -> tuple:
+    global file_name, laser_machine
 
     if msg_incoming_data["machine_name"] in machine_names:
         if msg_incoming_data["mdf_type"] in mdf_types:

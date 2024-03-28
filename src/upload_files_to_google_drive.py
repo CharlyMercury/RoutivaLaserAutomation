@@ -2,15 +2,15 @@
 # Useful url: https://d35mpxyw7m7k7g.cloudfront.net/bigdata_1/Get+Authentication+for+Google+Service+API+.pdf
 # Useful url: https://stackoverflow.com/questions/24419188/automating-pydrive-verification-process
 import json
+import os
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
-from src.mqtt_server_client import MqttClient
-import os
+from mqtt_client import MqttClient
 
 # Below code does the authentication
 # part of the code
 gauth = GoogleAuth()
-gauth.LoadCredentialsFile("./my_creds.json")
+gauth.LoadCredentialsFile("./src/google_drive_code/my_creds.json")
 
 if gauth.credentials is None:
     # Authenticate if they're not there
@@ -21,7 +21,7 @@ if gauth.credentials is None:
     gauth.LocalWebserverAuth()
 elif gauth.access_token_expired:
     # Delete my_creds.json file before to make the Refresh
-    os.remove("./my_creds.json")
+    os.remove("./src/google_drive_code/my_creds.json")
     # Refresh them if expired
     gauth.Refresh()
     gauth.Authorize()
@@ -29,7 +29,7 @@ else:
     # Initialize the saved creds
     gauth.Authorize()
 # Save the current credentials to a file
-gauth.SaveCredentialsFile("./my_creds.json")
+gauth.SaveCredentialsFile("./src/google_drive_code/my_creds.json")
 
 # Creates local webserver and auto
 # handles authentication.
@@ -71,20 +71,17 @@ for x in upload_file_list:
         file_3.GetContentFile(file_3['title'])
     """
 
-
-mqtt_client = MqttClient(broker_address='192.168.0.192', broker_port=1883)
-
-with open('./my_creds.json', 'r') as file:
+with open('./src/google_drive_code/my_creds.json', 'r') as file:
     credentials_dict = json.load(file)
 
-topic_to_publish = 'routiva_server/trigger_cutting'
+topic_to_publish = "routiva_server/trigger_cutting"
 message_to_publish = {
-    'machine_name': 'sculpfun_s9_proofs',
+    'machine_name': 'sculpfun_laser_90_90',
     'mdf_type': 'natural_mdf',
     'file_name': 'Corte.gcode',
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
     'credentials': credentials_dict}
-
-mqtt_client.publish(topic=topic_to_publish, message=message_to_publish)
-
-
+message_to_publish_encoded = json.dumps(message_to_publish)
+mqtt_client = MqttClient(broker_address='192.168.1.192', broker_port=1883)
+mqtt_client.connect()
+mqtt_client.publish(topic_to_publish, message_to_publish_encoded)
