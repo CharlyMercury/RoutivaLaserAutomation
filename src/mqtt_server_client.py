@@ -80,7 +80,7 @@ class MqttServerBrokerClient:
 
         print(msg.topic, msg.payload.decode())
 
-        if msg.topic == 'routiva_mqtt_broker/trigger_cutting':
+        if msg.topic == 'routiva_server/trigger_cutting':
             validation_status, validation_error = validating_coming_information(msg.payload.decode())
 
             if validation_status and validation_error == "No errors":
@@ -89,6 +89,6 @@ class MqttServerBrokerClient:
             if not validation_status:
                 self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], validation_error)
 
-        if msg.topic == 'routiva_mqtt_broker/confirmation_status_machine':
+        if msg.topic == 'routiva_server/confirmation_status_machine':
 
             print('')
