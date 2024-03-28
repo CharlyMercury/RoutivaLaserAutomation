@@ -65,7 +65,7 @@ folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'"""
         file_3.GetContentFile(file_3['title'])
     """
 
-with open('./src/google_drive_code/my_creds.json', 'r') as file:
+with open('google_drive_code/my_creds.json', 'r') as file:
     credentials_dict = json.load(file)
 
 topic_to_publish = "routiva_server/trigger_cutting"

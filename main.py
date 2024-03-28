@@ -59,15 +59,15 @@ def run() -> None:
     server_broker_address = 'broker.hivemq.com'
 
     mqtt_client = MqttServerBrokerClient(broker_address, 1883)
-    # mqtt_client.return_parameters_()
-    # file_path = f"gcodes/{mqtt_client.file_name}"
-    # laser_machine_ = mqtt_client.laser_machine
-    # time.sleep(1)
-    # print(file_path, laser_machine_)
-    # machine_actuators = MachineActuators(broker_address, broker_port=1883)
-    # machine_actuators.turn_on_off_actuators(False)
+    mqtt_client.return_parameters_()
+    file_path = f"gcodes/{mqtt_client.file_name}"
+    laser_machine_ = mqtt_client.laser_machine
+    time.sleep(1)
+    print(file_path, laser_machine_)
+    machine_actuators = MachineActuators(broker_address, broker_port=1883)
+    machine_actuators.turn_on_off_actuators(False)
 
-    """try:
+    try:
         machine_actuators.turn_on_off_actuators(True)
         # machine_status = run_machine_status(broker_address)
         if machine_status == "machine is ready to run":
@@ -112,7 +112,7 @@ def run() -> None:
         else:
             raise Exception(" Problem to connect to machine ")
     except Exception as err:
-        logging.error(f'An error occurred: {err}', exc_info=True)"""
+        logging.error(f'An error occurred: {err}', exc_info=True)
 
 
 if __name__ == "__main__":
