@@ -1,8 +1,10 @@
 # Useful url: https://www.projectpro.io/recipes/upload-files-to-google-drive-using-python
 # Useful url: https://d35mpxyw7m7k7g.cloudfront.net/bigdata_1/Get+Authentication+for+Google+Service+API+.pdf
 # Useful url: https://stackoverflow.com/questions/24419188/automating-pydrive-verification-process
+import json
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
+from src.mqtt_server_client import MqttClient
 import os
 
 # Below code does the authentication
@@ -35,7 +37,8 @@ drive = GoogleDrive(gauth)
 
 # replace the value of this variable
 # with the absolute path of the directory
-# upload_file_list = [r'./src/google_drive_code/proposed_architecture.png', r'./src/google_drive_code/proposed_architecture_2.png']
+# upload_file_list =
+# [r'./src/google_drive_code/proposed_architecture_rf.png', r'./src/google_drive_code/proposed_architecture_2.png']
 upload_file_list = [r'Corte.gcode']
 folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'
 
@@ -67,4 +70,21 @@ for x in upload_file_list:
         print(file_3['title'])
         file_3.GetContentFile(file_3['title'])
     """
+
+
+mqtt_client = MqttClient(broker_address='192.168.0.192', broker_port=1883)
+
+with open('./my_creds.json', 'r') as file:
+    credentials_dict = json.load(file)
+
+topic_to_publish = 'routiva_server/trigger_cutting'
+message_to_publish = {
+    'machine_name': 'sculpfun_s9_proofs',
+    'mdf_type': 'natural_mdf',
+    'file_name': 'Corte.gcode',
+    'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
+    'credentials': credentials_dict}
+
+mqtt_client.publish(topic=topic_to_publish, message=message_to_publish)
+
 
