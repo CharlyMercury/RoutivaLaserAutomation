@@ -55,9 +55,10 @@ def run() -> None:
         'baud_rate': 0
     }
     machine_status = 'machine is ready to run'
-    broker_address = '192.168.1.192'  # 'broker.hivemq.com'
+    broker_address = '192.168.1.192'
+    server_broker_address = 'broker.hivemq.com'
 
-    mqtt_client = MqttServerBrokerClient(broker_address, 1883)
+    mqtt_client = MqttServerBrokerClient(server_broker_address, 1883)
     mqtt_client.return_parameters_()
     file_path = f"gcodes/{mqtt_client.file_name}"
     laser_machine_ = mqtt_client.laser_machine
