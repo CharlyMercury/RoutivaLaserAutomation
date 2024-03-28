@@ -55,8 +55,7 @@ class MqttClient:
 
         # Set callbacks
         self.client.on_connect = self.__on_connect__
-        # self.client.on_disconnect = self.__on_disconnect__
-        self.client.on_log = self.__on_log__
+        self.client.on_disconnect = self.__on_disconnect__
 
         # Set on_message callback dynamically
         if on_message_callback:
@@ -65,9 +64,6 @@ class MqttClient:
             self.client.on_message = self.__default_on_message__
 
         self.client_id = None
-
-    def __on_log__(self, client, userdata, level, buff):
-        print(buff)
 
     def __on_connect__(self, client, userdata, flags, rc):
         """
