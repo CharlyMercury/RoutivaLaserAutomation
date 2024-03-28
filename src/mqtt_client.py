@@ -102,6 +102,7 @@ class MqttClient:
         :param msg:
         :return:
         """
+        print(f"Received message on topic {msg.topic}: {msg.payload.decode()}")
         if msg.topic == f"your/topic/{self.client_id}":
             print("Ignoring message sent by this client.")
             return
