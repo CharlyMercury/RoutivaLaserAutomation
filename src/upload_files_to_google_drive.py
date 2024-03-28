@@ -81,7 +81,7 @@ message_to_publish = {
     'mdf_type': 'natural_mdf',
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
     'credentials': credentials_dict}
-message_to_publish_encoded = json.dumps(message_to_publish)
+message_to_publish_encoded = json.dumps(message_to_publish).encode('utf-8')
 mqtt_client = MqttClient(broker_address='192.168.1.192', broker_port=1883)
 mqtt_client.connect()
 mqtt_client.publish(topic_to_publish, message_to_publish_encoded)

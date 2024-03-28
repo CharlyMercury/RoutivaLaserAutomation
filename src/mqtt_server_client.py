@@ -2,8 +2,6 @@ from src.mqtt_client import MqttClient
 from src.download_file_google_drive import GoogleDriveUtilities
 import json
 
-global file_name, laser_machine
-
 machine_names = [
     'sculpfun_s9_proofs',
     'sculpfun_s30_90_90',
@@ -65,8 +63,12 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
     return validation_status, validation_error
 
 
+global file_name, laser_machine
+file_name = ''
+laser_machine = ''
+
+
 class MqttServerBrokerClient:
-    global file_name, laser_machine
 
     def __init__(self, mqtt_broker_address, broker_port):
         """
@@ -85,6 +87,8 @@ class MqttServerBrokerClient:
     def on_message_callback(self, client, userdata, msg):
 
         global file_name, laser_machine
+
+        print(msg.topic, msg.payload.decode())
 
         if msg.topic == 'routiva_server/trigger_cutting':
 
