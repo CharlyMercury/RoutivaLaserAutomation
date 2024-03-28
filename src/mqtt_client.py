@@ -102,7 +102,6 @@ class MqttClient:
         :param msg:
         :return:
         """
-        print(f"Received message on topic {msg.topic}: {msg.payload.decode()}")
         if msg.topic == f"your/topic/{self.client_id}":
             print("Ignoring message sent by this client.")
             return
@@ -134,15 +133,15 @@ class MqttClient:
         """
         self.client.on_disconnect(self.client, self.client._userdata, 0)
 
-    def publish(self, topic, message):
+    def publish(self, topic_, message):
         """
         Publishing Method
 
-        :param topic:
+        :param topic_:
         :param message:
         :return:
         """
-        self.client.publish(topic, message)
+        self.client.publish(topic=topic_, payload=message, qos=1)
 
     def subscribe(self, topics):
         """
@@ -152,7 +151,7 @@ class MqttClient:
         :return:
         """
         for topic in topics:
-            print(f"Subscribing to {topics}")
+            # print(f"Subscribing to {topics}")
             self.client.subscribe(topic)
 
     def validate_connection(self):

@@ -7,7 +7,7 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 from mqtt_client import MqttClient
 
-# Below code does the authentication
+"""# Below code does the authentication
 # part of the code
 gauth = GoogleAuth()
 gauth.LoadCredentialsFile("./src/google_drive_code/my_creds.json")
@@ -40,25 +40,19 @@ drive = GoogleDrive(gauth)
 # upload_file_list =
 # [r'./src/google_drive_code/proposed_architecture_rf.png', r'./src/google_drive_code/proposed_architecture_2.png']
 upload_file_list = [r'Corte.gcode']
-folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'
+folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'"""
 
 # iterating thought all the files/folder
 # of the desired directory
-for x in upload_file_list:
+"""for x in upload_file_list:
     file_ = drive.CreateFile({'parents': [{'id': folder_id}]})
     file_.SetContentFile(x)
-    file_.Upload()
+    file_.Upload()"""
 
-    """
-    Due to a known bug in pydrive if we
-    don't empty the variable used to
-    upload the files to Google Drive the
-    file stays open in memory and causes a
-    memory leak, therefore preventing its
-    deletion        
-    """
+    #  Due to a known bug in pydrive if we don't empty the variable used to upload the files to Google Drive the
+    #  file stays open in memory and causes a memory leak, therefore preventing its deletion
 
-    """
+"""
     file_list = drive.ListFile(
         {'q': "'{}' in parents and trashed=false".format(folder_id)}).GetList()
 
@@ -74,15 +68,15 @@ for x in upload_file_list:
 with open('./src/google_drive_code/my_creds.json', 'r') as file:
     credentials_dict = json.load(file)
 
-topic_to_publish = 'routiva_server/trigger_cutting'
-message_to_publish = {
+topic_to_publish = "routiva_server/trigger_cutting"
+"""message_to_publish = {
     'machine_name': 'sculpfun_s30_90_90',
     'file_name': 'Corte.gcode',
     'mdf_type': 'natural_mdf',
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
-    'credentials': credentials_dict}
-message_to_publish = {'hola': 'hola'}
-message_to_publish_encoded = json.dumps(message_to_publish, indent=4).encode('utf-8')
+    'credentials': credentials_dict}"""
+message_to_publish = b"HOLA"
+message_to_publish_encoded = message_to_publish
 mqtt_client = MqttClient(broker_address='192.168.1.192', broker_port=1883)
-mqtt_client.connect()
+mqtt_client.connect('loop_start', 'routiva_server')
 mqtt_client.publish(topic_to_publish, message_to_publish_encoded)

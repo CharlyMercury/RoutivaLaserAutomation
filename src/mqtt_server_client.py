@@ -3,8 +3,7 @@ from src.download_file_google_drive import GoogleDriveUtilities
 import json
 
 
-
-global file_name, laser_machine
+global file_name_archive, laser_machine
 
 machine_names = [
     'sculpfun_s9_proofs',
@@ -27,14 +26,14 @@ publishing_topics = {
 
 
 def on_message_callback_server(client, userdata, msg):
-    global file_name, laser_machine
+    global file_name_archive, laser_machine
 
     print(msg.topic, msg.payload.decode())
 
     if msg.topic == 'routiva_server/trigger_cutting':
 
         message_in = json.loads(msg.payload.decode())
-        file_name = message_in['file_name']
+        file_name_archive = message_in['file_name']
         laser_machine = message_in['machine_name']
         validation_status, validation_error = validating_coming_information(message_in)
 
@@ -51,7 +50,7 @@ def on_message_callback_server(client, userdata, msg):
 
 
 def validating_coming_information(msg_incoming_data: dict) -> tuple:
-    global file_name, laser_machine
+    global file_name_archive, laser_machine
 
     if msg_incoming_data["machine_name"] in machine_names:
         if msg_incoming_data["mdf_type"] in mdf_types:
@@ -61,11 +60,11 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
                     print("Downloading File from Google Drive")
 
                     folder_id = msg_incoming_data["folder_id"]
-                    file_name = msg_incoming_data['file_name']
+                    file_name_archive = msg_incoming_data['file_name']
                     credentials = msg_incoming_data['credentials']
 
                     google_drive_ = GoogleDriveUtilities(folder_id, credentials)
-                    download_status, download_message = google_drive_.download_file(file_name)
+                    download_status, download_message = google_drive_.download_file(file_name_archive)
                     google_drive_.delete_token_file()
                     remove_status, remove_message = google_drive_.remove_file_gdrive()
 
@@ -94,7 +93,6 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
 class MqttServerBrokerClient:
 
     def __init__(self, mqtt_broker_address, broker_port):
-        global file_name, laser_machine
         """
         Constructor of the class
 
@@ -105,10 +103,22 @@ class MqttServerBrokerClient:
         self.laser_machine = ''
         self.mqtt_client = MqttClient(broker_address=mqtt_broker_address,
                                       broker_port=broker_port,
-                                      on_message_callback=on_message_callback_server)
-        self.mqtt_client.connect('loop_forever', topics=subscribing_topics)
+                                      on_message_callback=self.on_message_callback)
+        self.mqtt_client.connect(type_of_connection='loop_forever', topics=subscribing_topics)
+
+    def on_message_callback(self, client, userdata, msg):
+        """
+        The method is invoked when a message is received on a subscribed topic.
+
+        If the msg contains information of a characteristics, then is validated the information.
+
+        :param client:
+        :param userdata:
+        :param msg: incoming message
+        :return:
+        """
+        print(msg.topic, msg.payload)
 
     def return_parameters_(self):
-        global file_name, laser_machine
-        self.file_name = file_name
+        self.file_name = file_name_archive
         self.laser_machine = laser_machine
