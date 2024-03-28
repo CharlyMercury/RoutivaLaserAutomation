@@ -66,6 +66,7 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
 
 
 class MqttServerBrokerClient:
+    global file_name, laser_machine
 
     def __init__(self, mqtt_broker_address, broker_port):
         """
