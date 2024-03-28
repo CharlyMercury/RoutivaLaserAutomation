@@ -151,7 +151,7 @@ class MqttClient:
         :return:
         """
         for topic in topics:
-            # print(f"Subscribing to {topics}")
+            print(f"Subscribing to {topics}")
             self.client.subscribe(topic)
 
     def validate_connection(self):
