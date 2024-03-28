@@ -1,5 +1,6 @@
 from src.mqtt_client import MqttClient
 from src.download_file_google_drive import GoogleDriveUtilities
+import json
 
 
 machine_names = [
@@ -78,7 +79,7 @@ class MqttServerBrokerClient:
 
     def on_message_callback(self, client, userdata, msg):
 
-        print(msg.topic, msg.payload.decode())
+        print(msg.topic, msg.payload.decode(), type(json.load(msg.payload.decode())))
 
         if msg.topic == 'routiva_server/trigger_cutting':
             validation_status, validation_error = validating_coming_information(msg.payload.decode())
