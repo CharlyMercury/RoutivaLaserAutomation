@@ -55,7 +55,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
         'baud_rate': 0
     }
     machine_status = 'machine is ready to run'
-    broker_address = '192.168.1.192'  # 'broker.hivemq.com'
+    broker_address = '192.168.0.192'  # 'broker.hivemq.com'
 
     # mqtt_client = MqttServerBrokerClient(broker_address, 1883)
 
@@ -110,5 +110,5 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
 if __name__ == "__main__":
     new_file = 'example_3_cajita_6_6'
     g_code_file = f"examples/{new_file}.gcode"
-    laser_machine = 'sculpfun_s30_90_90'
+    laser_machine = 'sculpfun_s9_proofs'
     run(g_code_file, laser_machine)

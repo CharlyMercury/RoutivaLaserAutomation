@@ -15,6 +15,7 @@ sudo systemctl enable ssh.service
 sudo systemctl start ssh.service
 ```
 
+
 ### Enabling multiples Wifis with static IP:
 
 0. Add 8.8.8.8 to nameserver in /etc/resolv.conf
@@ -34,8 +35,10 @@ nameserver 8.8.8.8
 sudo nano /etc/network/interfaces
 ```
 
+```bash
 # interfaces(5) file used by ifup(8) and ifdown(8)
 # Include files from /etc/network/interfaces.d:
+```
 source /etc/network/interfaces.d/*
 
 auto lo
@@ -97,7 +100,8 @@ id_str="CharlyMercury"
 sudo reboot
 ```
 
-### Configurate Mosquitto Broker
+
+### Configurate Mosquitto Broker ###
 
 0. Install Mosquitto Broker
 
@@ -133,3 +137,17 @@ mosquitto -v
 
     - $ mosquitto_pub -h 192.168.0.192 -p 1883 -t "my/topic" -m "Hello, MQTT!"
 
+
+### Configurate usb devices ###
+
+sudo nano /etc/udev/rules.d/10-usb-serial.rules
+
+``` nano
+KERNELS=="1-1.1:1.0", SYMLINK+="sculpfun_90_90"
+KERNELS=="1-1.2:1.0", SYMLINK+="sculpfun_rotatory"
+KERNELS=="1-1.3:1.0", SYMLINK+="sculpfun_s9_proofs"
+```
+
+```bash
+sudo udevadm trigger
+```
