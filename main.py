@@ -106,7 +106,7 @@ def run() -> None:
 
             if g_code_sender_status == 'Finished':
                 logging.info("Finishing job.")
-                os.remove("./gcodes/Corte.gcode")
+                os.remove(f"./gcodes/{mqtt_client.file_name}")
                 machine_actuators.turn_on_off_actuators(False)
                 g_code_sender.close_serial_connection()
         else:
