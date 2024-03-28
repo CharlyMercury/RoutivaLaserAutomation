@@ -74,12 +74,12 @@ class MqttServerBrokerClient:
         :param mqtt_broker_address: mqtt broker address
         :param broker_port: mqtt broker port
         """
+        self.file_name = ''
+        self.laser_machine = ''
         self.mqtt_client = MqttClient(broker_address=mqtt_broker_address,
                                       broker_port=broker_port,
                                       on_message_callback=self.on_message_callback)
         self.mqtt_client.connect('loop_forever', topics=subscribing_topics)
-        self.file_name = ''
-        self.laser_machine = ''
 
     def on_message_callback(self, client, userdata, msg):
 

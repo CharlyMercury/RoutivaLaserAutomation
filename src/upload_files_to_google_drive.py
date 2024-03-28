@@ -76,9 +76,9 @@ with open('./src/google_drive_code/my_creds.json', 'r') as file:
 
 topic_to_publish = "routiva_server/trigger_cutting"
 message_to_publish = {
-    'machine_name': 'sculpfun_laser_90_90',
-    'mdf_type': 'natural_mdf',
+    'machine_name': 'sculpfun_s30_90_90',
     'file_name': 'Corte.gcode',
+    'mdf_type': 'natural_mdf',
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
     'credentials': credentials_dict}
 message_to_publish_encoded = json.dumps(message_to_publish)
