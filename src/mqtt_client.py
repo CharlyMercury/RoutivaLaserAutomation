@@ -88,6 +88,8 @@ class MqttClient:
         :param rc:
         :return:
         """
+        self.client.loop_stop()
+        self.client.disconnect()
         print(self.validate_connection)
         print(f"Disconnected with result code {rc}")
 
@@ -120,11 +122,10 @@ class MqttClient:
         if type_of_connection == 'loop_start':
             self.client.loop_start()
         elif type_of_connection == 'loop_forever':
-            print("Loop forever")
             self.subscribe(topics)
             self.client.loop_forever()
 
-    def disconnect(self):
+    def disconnect_client(self):
         """
         Disconnection Method
 

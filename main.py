@@ -58,6 +58,7 @@ def run(g_code_file_: str, laser_machine_: str) -> None:
     broker_address = '192.168.0.192'  # 'broker.hivemq.com'
 
     mqtt_client = MqttServerBrokerClient(broker_address, 1883)
+    time.sleep(1)
 
     machine_actuators = MachineActuators(broker_address, broker_port=1883)
     machine_actuators.turn_on_off_actuators(False)

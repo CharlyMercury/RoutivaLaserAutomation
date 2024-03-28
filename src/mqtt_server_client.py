@@ -79,9 +79,6 @@ class MqttServerBrokerClient:
 
     def on_message_callback(self, client, userdata, msg):
 
-        message_in = json.loads(msg.payload.decode())
-        print(msg.topic, message_in)
-
         if msg.topic == 'routiva_server/trigger_cutting':
 
             message_in = json.loads(msg.payload.decode())
@@ -89,7 +86,7 @@ class MqttServerBrokerClient:
 
             if validation_status and validation_error == "No errors":
                 self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], "Initializing Cutting Process")
-                self.mqtt_client.disconnect()
+                self.mqtt_client.disconnect_client()
             if not validation_status:
                 self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], validation_error)
 
