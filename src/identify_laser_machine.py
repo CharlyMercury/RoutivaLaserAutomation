@@ -10,7 +10,7 @@
 # usb_name = sculpfun_laser_90_90
 # Adding this product to usb rules
 # sudo nano /etc/udev/rules.d/10-usb-serial.rules
-# KERNELS=="1-1.1:1.0", SYMLINK+="sculpfun_90_90"
+# KERNELS=="1-1.1:1.0", SYMLINK+="sculpfun_s30_90_90"
 # sudo udevadm trigger
 
 
@@ -20,7 +20,7 @@
 # usb_name = sculpfun_laser_40_40_rotatory
 # Adding this product to usb rules
 # sudo nano /etc/udev/rules.d/10-usb-serial.rules
-# KERNELS=="1-1.2:1.0", SYMLINK+="sculpfun_rotatory"
+# KERNELS=="1-1.2:1.0", SYMLINK+="sculpfun_s30_40_40_rotatory"
 # sudo udevadm trigger
 
 
@@ -42,10 +42,10 @@ def identifying_laser_board(board_to_use: str):
         port_name = "/dev/sculpfun_s9_proofs"
         baud_rate = 115200
     elif board_to_use == 'sculpfun_s30_90_90':
-        port_name = "/dev/sculpfun_90_90"
+        port_name = "/dev/sculpfun_s30_90_90"
         baud_rate = 115200
     elif board_to_use == 'sculpfun_s30_40_40_rotatory':
-        port_name = "/dev/sculpfun_rotatory"
+        port_name = "/dev/sculpfun_s30_40_40_rotatory"
         baud_rate = 115200
     else:
         port_name = 'invalid board'
