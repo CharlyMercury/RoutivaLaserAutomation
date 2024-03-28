@@ -55,7 +55,7 @@ class MqttClient:
 
         # Set callbacks
         self.client.on_connect = self.__on_connect__
-        self.client.on_disconnect = self.__on_disconnect__
+        # self.client.on_disconnect = self.__on_disconnect__
         self.client.on_log = self.__on_log__
 
         # Set on_message callback dynamically
