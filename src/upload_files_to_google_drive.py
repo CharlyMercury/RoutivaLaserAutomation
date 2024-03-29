@@ -5,7 +5,7 @@ import json
 import os
 from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
-from src.mqtt_client import MqttClient
+from mqtt_client import MqttClient
 
 """# Below code does the authentication
 # part of the code
@@ -65,7 +65,7 @@ folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'"""
         file_3.GetContentFile(file_3['title'])
     """
 
-with open('google_drive_code/my_creds.json', 'r') as file:
+with open('./src/google_drive_code/my_creds.json', 'r') as file:
     credentials_dict = json.load(file)
 
 topic_to_publish = "routiva_server/trigger_cutting"
