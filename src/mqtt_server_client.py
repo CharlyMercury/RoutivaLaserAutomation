@@ -14,6 +14,7 @@
 from src.mqtt_client import MqttClient
 from src.download_file_google_drive import GoogleDriveUtilities
 import json
+import logging
 
 
 global file_name, laser_machine
@@ -57,7 +58,7 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
             if msg_incoming_data["file_name"] != "":
                 if msg_incoming_data["folder_id"] != "":
 
-                    print("Downloading File from Google Drive")
+                    logging.info(f" Downloading File from Google Drive")
 
                     folder_id = msg_incoming_data["folder_id"]
                     file_name = msg_incoming_data['file_name']
@@ -118,8 +119,6 @@ class MqttServerBrokerClient:
         :return:
         """
         global file_name, laser_machine
-
-        print(msg.topic, msg.payload.decode())
 
         if msg.topic == 'routiva_server/trigger_cutting':
 

@@ -59,7 +59,7 @@ class GoogleDriveUtilities:
             return False, "Download Failed"
         elif len(file_list) > 0:
             for i, file in enumerate(sorted(file_list, key=lambda y: y['title']), start=1):
-                print('Downloading {} file from GDrive ({}/{})'.format(file['title'], i, len(file_list)))
+                # print('Downloading {} file from GDrive ({}/{})'.format(file['title'], i, len(file_list)))
                 try:
                     self.file_id = file['id']
                     file.GetContentFile(file['title'])

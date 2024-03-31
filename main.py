@@ -65,10 +65,10 @@ def run() -> None:
     try:
         while True:
             if mqtt_client.validation_status:
-                print("We are catched ")
                 mqtt_client.return_parameters_()
                 file_path = f"gcodes/{mqtt_client.file_name}"
                 laser_machine_ = mqtt_client.laser_machine
+                logging.info(f"Gcode has been downloaded successfully: {file_path}")
                 break
     except Exception as err:
         logging.error(f'An error occurred: {err}', exc_info=True)
@@ -96,7 +96,9 @@ def run() -> None:
     try:
         g_code_sender = GcodeSender(
             laser_machine_parameters['port'],
-            laser_machine_parameters['baud_rate'])
+            laser_machine_parameters['baud_rate'],
+            laser_machine_
+            )
         connection_response = g_code_sender.connection()
         if connection_response == f'Serial connection established on ' \
                                   f'{laser_machine_parameters["port"]} at ' \

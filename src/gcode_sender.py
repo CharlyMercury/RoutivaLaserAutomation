@@ -7,11 +7,12 @@ import serial
 
 class GcodeSender:
 
-    def __init__(self, port: str, baud_rate: int = 115200, timeout: int = 1):
+    def __init__(self, port: str, baud_rate: int = 115200, timeout: int = 1, laser_machine: str = ''):
         self.port = port
         self.baud_rate = baud_rate
         self.serial_connection = None
         self.timeout = timeout
+        self.laser_machine = laser_machine
 
     def connection(self):
         try:
@@ -34,8 +35,9 @@ class GcodeSender:
         self.serial_connection.flushInput()
 
     def __send_home_machine(self):
-        send_home_g_code = '$H'
-        self.__send_g_code_command(command=send_home_g_code)
+        if self.laser_machine is not 'sculpfun_s9_proofs':
+            send_home_g_code = '$H'
+            self.__send_g_code_command(command=send_home_g_code)
 
     def send_g_code(self, gcode_path: str):
         g_code_data = open(gcode_path, 'r')
