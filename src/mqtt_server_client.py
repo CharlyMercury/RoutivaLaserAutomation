@@ -107,7 +107,11 @@ class MqttServerBrokerClient:
                                       broker_port=broker_port,
                                       on_message_callback=self.on_message_callback,
                                       client_id_='ServerClient')
-        self.mqtt_client.connect(type_of_connection='loop_start', topics=subscribing_topics)
+        try:
+            self.mqtt_client.connect(type_of_connection='loop_start', topics=subscribing_topics)
+            logging.info(f" Connected successfully to a broker server: {mqtt_broker_address} though {broker_port}")
+        except Exception as err:
+            logging.error(f'An error occurred: {err}', exc_info=True)
 
     def on_message_callback(self, client, userdata, msg):
         """
@@ -129,6 +133,7 @@ class MqttServerBrokerClient:
 
             if self.validation_status and validation_error == "No errors":
 
+                logging.info(f"Incoming message validated at topic: {msg.topic} ")
                 self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], "Initializing Cutting Process")
 
             if not self.validation_status:

@@ -87,7 +87,6 @@ def run() -> None:
 
     try:
         if machine_status == "machine is ready to run":
-            print(machine_status)
             laser_machine_parameters = identifying_laser_board(laser_machine_)
             logging.info(f"Machine Name: {laser_machine_parameters}")
         else:

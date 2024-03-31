@@ -19,6 +19,7 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 import os
 import json
+import logging
 
 
 class GoogleDriveUtilities:
@@ -58,6 +59,7 @@ class GoogleDriveUtilities:
         if len(file_list) == 0:
             return False, "Download Failed"
         elif len(file_list) > 0:
+            logging.info("Download in progress")
             for i, file in enumerate(sorted(file_list, key=lambda y: y['title']), start=1):
                 # print('Downloading {} file from GDrive ({}/{})'.format(file['title'], i, len(file_list)))
                 try:
@@ -81,6 +83,7 @@ class GoogleDriveUtilities:
         try:
             file = self.drive.CreateFile({'id': self.file_id})
             file.Delete()
+            logging.info("File Removed Successfully")
             return True, "Removed Successfully"
         except Exception as err:
             print(err)
