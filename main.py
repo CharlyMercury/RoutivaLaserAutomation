@@ -55,7 +55,7 @@ def run() -> None:
         'baud_rate': 0
     }
     machine_status = 'machine is ready to run'
-    broker_address = '192.168.1.192'
+    broker_address = '192.168.0.192'
     server_broker_address = 'broker.hivemq.com'
 
     mqtt_client = MqttServerBrokerClient(broker_address, 1883)

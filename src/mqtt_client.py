@@ -37,7 +37,9 @@ class MqttClient:
         Mqtt client
     """
 
-    def __init__(self, broker_address, broker_port: int = 1883, username=None, password=None, on_message_callback=None):
+    def __init__(self, broker_address, broker_port: int = 1883,
+                 username=None, password=None,
+                 on_message_callback=None, client_id_: str = 'raspberry'):
         """
         We have the following parameters for the class constructor.
 
@@ -47,7 +49,7 @@ class MqttClient:
         :param password: password of user
         :param on_message_callback: function for mqtt subscriptions
         """
-        self.client = mqtt.Client(client_id="raspberry")
+        self.client = mqtt.Client(client_id=client_id_)
         self.broker_address = broker_address
         self.broker_port = broker_port
         self.username = username

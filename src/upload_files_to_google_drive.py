@@ -7,7 +7,7 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 from mqtt_client import MqttClient
 
-"""# Below code does the authentication
+# Below code does the authentication
 # part of the code
 gauth = GoogleAuth()
 gauth.LoadCredentialsFile("./src/google_drive_code/my_creds.json")
@@ -40,7 +40,7 @@ drive = GoogleDrive(gauth)
 # upload_file_list =
 # [r'./src/google_drive_code/proposed_architecture_rf.png', r'./src/google_drive_code/proposed_architecture_2.png']
 upload_file_list = [r'Corte.gcode']
-folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'"""
+folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'
 
 # iterating thought all the files/folder
 # of the desired directory
@@ -70,12 +70,12 @@ with open('./src/google_drive_code/my_creds.json', 'r') as file:
 
 topic_to_publish = "routiva_server/trigger_cutting"
 message_to_publish = {
-    'machine_name': 'sculpfun_s30_90_90',
+    'machine_name': 'sculpfun_s9_proofs',
     'file_name': 'Corte.gcode',
     'mdf_type': 'natural_mdf',
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
     'credentials': credentials_dict}
 
-mqtt_client = MqttClient(broker_address='192.168.1.192', broker_port=1883)
+mqtt_client = MqttClient(broker_address='192.168.0.192', broker_port=1883, client_id_='Grive_uploader')
 mqtt_client.connect()
 mqtt_client.publish(topic_to_publish, json.dumps(message_to_publish))
