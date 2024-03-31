@@ -36,7 +36,7 @@ class GcodeSender:
 
     def __send_home_machine(self):
         print(self.laser_machine)
-        if self.laser_machine is not 'sculpfun_s9_proofs':
+        if self.laser_machine != 'sculpfun_s9_proofs':
             send_home_g_code = '$H'
             self.__send_g_code_command(command=send_home_g_code)
 
