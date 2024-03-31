@@ -153,3 +153,4 @@ class MqttServerBrokerClient:
         global file_name, laser_machine
         self.file_name = file_name
         self.laser_machine = laser_machine
+        self.validation_status = False
