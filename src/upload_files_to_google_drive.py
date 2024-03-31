@@ -44,13 +44,13 @@ folder_id = '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL'
 
 # iterating thought all the files/folder
 # of the desired directory
-"""for x in upload_file_list:
+for x in upload_file_list:
     file_ = drive.CreateFile({'parents': [{'id': folder_id}]})
     file_.SetContentFile(x)
-    file_.Upload()"""
+    file_.Upload()
 
-    #  Due to a known bug in pydrive if we don't empty the variable used to upload the files to Google Drive the
-    #  file stays open in memory and causes a memory leak, therefore preventing its deletion
+#  Due to a known bug in pydrive if we don't empty the variable used to upload the files to Google Drive the
+#  file stays open in memory and causes a memory leak, therefore preventing its deletion
 
 """
     file_list = drive.ListFile(
@@ -76,6 +76,6 @@ message_to_publish = {
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
     'credentials': credentials_dict}
 
-mqtt_client = MqttClient(broker_address='192.168.0.192', broker_port=1883, client_id_='Grive_uploader')
+mqtt_client = MqttClient(broker_address='192.168.0.192', broker_port=1883, client_id_='grive_uploader')
 mqtt_client.connect()
 mqtt_client.publish(topic_to_publish, json.dumps(message_to_publish))
