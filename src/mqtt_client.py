@@ -92,8 +92,8 @@ class MqttClient:
         """
         self.client.loop_stop()
         self.client.disconnect()
-        print(self.validate_connection)
-        print(f"Disconnected with result code {rc}")
+        # print(self.validate_connection)
+        # print(f"Disconnected with result code {rc}")
 
     def __default_on_message__(self, client, userdata, msg):
         """
@@ -107,8 +107,8 @@ class MqttClient:
         if msg.topic == f"your/topic/{self.client_id}":
             print("Ignoring message sent by this client.")
             return
-        print(self.validate_connection)
-        print(f"Received message on topic {msg.topic}: {msg.payload.decode()}")
+        # print(self.validate_connection)
+        # print(f"Received message on topic {msg.topic}: {msg.payload.decode()}")
 
     def connect(self, type_of_connection: str = 'loop_start', topics=None):
         """
@@ -154,7 +154,7 @@ class MqttClient:
         :return:
         """
         for topic in topics:
-            print(f"Subscribing to {topics}")
+            # print(f"Subscribing to {topics}")
             self.client.subscribe(topic)
 
     def validate_connection(self):
