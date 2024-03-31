@@ -105,8 +105,8 @@ class MqttServerBrokerClient:
         self.mqtt_client = MqttClient(broker_address=mqtt_broker_address,
                                       broker_port=broker_port,
                                       on_message_callback=self.on_message_callback,
-                                      client_id_='Server Client')
-        self.mqtt_client.connect(topics=subscribing_topics)
+                                      client_id_='ServerClient')
+        self.mqtt_client.connect(type_of_connection='loop_start', topics=subscribing_topics)
 
     def on_message_callback(self, client, userdata, msg):
         """
@@ -119,6 +119,8 @@ class MqttServerBrokerClient:
         """
         global file_name, laser_machine
 
+        print(msg.topic, msg.payload.decode())
+
         if msg.topic == 'routiva_server/trigger_cutting':
 
             message_in = json.loads(msg.payload.decode())
@@ -127,6 +129,7 @@ class MqttServerBrokerClient:
             self.validation_status, validation_error = validating_coming_information(message_in)
 
             if self.validation_status and validation_error == "No errors":
+
                 self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], "Initializing Cutting Process")
 
             if not self.validation_status:

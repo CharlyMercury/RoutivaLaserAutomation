@@ -65,6 +65,7 @@ def run() -> None:
     try:
         while True:
             if mqtt_client.validation_status:
+                print("We are catched ")
                 mqtt_client.return_parameters_()
                 file_path = f"gcodes/{mqtt_client.file_name}"
                 laser_machine_ = mqtt_client.laser_machine

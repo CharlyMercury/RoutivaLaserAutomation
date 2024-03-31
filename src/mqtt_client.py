@@ -123,6 +123,7 @@ class MqttClient:
         self.client.connect(self.broker_address, self.broker_port, 60)
         if type_of_connection == 'loop_start':
             self.client.loop_start()
+            self.subscribe(topics)
         elif type_of_connection == 'loop_forever':
             self.subscribe(topics)
             self.client.loop_forever()
@@ -153,7 +154,7 @@ class MqttClient:
         :return:
         """
         for topic in topics:
-            # print(f"Subscribing to {topics}")
+            print(f"Subscribing to {topics}")
             self.client.subscribe(topic)
 
     def validate_connection(self):
