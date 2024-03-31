@@ -1,6 +1,22 @@
+"""
+    Production MQTT Client
+
+    This Python script establishes a connection to a broker server located in the cloud via MQTT
+    (Message Queuing Telemetry Transport) protocol.
+
+    The primary goal of this script is to facilitate the production stage by transmitting
+    real-time updates about the various states of the manufacturing process.
+    This enables comprehensive traceability of the product throughout its lifecycle.
+
+    Author: Carlos Tovar
+    Date: 31/03/2024
+"""
 from src.mqtt_client import MqttClient
 from src.download_file_google_drive import GoogleDriveUtilities
 import json
+
+
+global file_name, laser_machine
 
 machine_names = [
     'sculpfun_s9_proofs',
@@ -23,6 +39,17 @@ publishing_topics = {
 
 
 def validating_coming_information(msg_incoming_data: dict) -> tuple:
+    """
+    Verify MQTT Incoming Data
+
+    This module validates the incoming data received via MQTT protocol.
+
+    :param msg_incoming_data: Dictionary containing relevant information from the incoming message.
+    :type msg_incoming_data: dict
+    :return: A tuple containing the status of the validation (True for successful, False for failed) and a message
+    describing the validation result.
+    :rtype: tuple
+    """
     global file_name, laser_machine
 
     if msg_incoming_data["machine_name"] in machine_names:
@@ -63,9 +90,6 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
     return validation_status, validation_error
 
 
-global file_name, laser_machine
-
-
 class MqttServerBrokerClient:
 
     def __init__(self, mqtt_broker_address, broker_port):
@@ -77,13 +101,22 @@ class MqttServerBrokerClient:
         """
         self.file_name = ''
         self.laser_machine = ''
+        self.validation_status = False
         self.mqtt_client = MqttClient(broker_address=mqtt_broker_address,
                                       broker_port=broker_port,
-                                      on_message_callback=self.on_message_callback)
-        self.mqtt_client.connect('loop_forever', topics=subscribing_topics)
+                                      on_message_callback=self.on_message_callback,
+                                      client_id_='Server Client')
+        self.mqtt_client.connect(topics=subscribing_topics)
 
     def on_message_callback(self, client, userdata, msg):
+        """
+        Subscriber mqtt method
 
+        :param client:
+        :param userdata:
+        :param msg:
+        :return:
+        """
         global file_name, laser_machine
 
         if msg.topic == 'routiva_server/trigger_cutting':
@@ -91,12 +124,12 @@ class MqttServerBrokerClient:
             message_in = json.loads(msg.payload.decode())
             file_name = message_in['file_name']
             laser_machine = message_in['machine_name']
-            validation_status, validation_error = validating_coming_information(message_in)
+            self.validation_status, validation_error = validating_coming_information(message_in)
 
-            if validation_status and validation_error == "No errors":
+            if self.validation_status and validation_error == "No errors":
                 self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], "Initializing Cutting Process")
-                self.mqtt_client.disconnect_client()
-            if not validation_status:
+
+            if not self.validation_status:
                 self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], validation_error)
 
         if msg.topic == 'routiva_server/confirmation_status_machine':
@@ -104,6 +137,11 @@ class MqttServerBrokerClient:
             print('')
 
     def return_parameters_(self):
+        """
+        Method to return parameters
+
+        :return:
+        """
         global file_name, laser_machine
         self.file_name = file_name
         self.laser_machine = laser_machine

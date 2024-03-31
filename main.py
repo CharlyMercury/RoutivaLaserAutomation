@@ -56,18 +56,25 @@ def run() -> None:
     }
     machine_status = 'machine is ready to run'
     broker_address = '192.168.0.192'
-    server_broker_address = 'broker.hivemq.com'
+    server_broker_address = '192.168.0.192'
+    laser_machine_, file_path = '', ''
+    machine_actuators = None
+    mqtt_client = MqttServerBrokerClient(server_broker_address, 1883)
 
-    mqtt_client = MqttServerBrokerClient(broker_address, 1883)
-    mqtt_client.return_parameters_()
-    file_path = f"gcodes/{mqtt_client.file_name}"
-    laser_machine_ = mqtt_client.laser_machine
-    time.sleep(1)
-    print(file_path, laser_machine_)
-    machine_actuators = MachineActuators(broker_address, broker_port=1883)
-    machine_actuators.turn_on_off_actuators(False)
+    # First State - Download gcode
+    try:
+        while True:
+            if mqtt_client.validation_status:
+                mqtt_client.return_parameters_()
+                file_path = f"gcodes/{mqtt_client.file_name}"
+                laser_machine_ = mqtt_client.laser_machine
+                break
+    except Exception as err:
+        logging.error(f'An error occurred: {err}', exc_info=True)
 
     try:
+        machine_actuators = MachineActuators(broker_address, broker_port=1883)
+        machine_actuators.turn_on_off_actuators(False)
         machine_actuators.turn_on_off_actuators(True)
         # machine_status = run_machine_status(broker_address)
         if machine_status == "machine is ready to run":
