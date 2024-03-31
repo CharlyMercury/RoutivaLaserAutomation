@@ -58,11 +58,11 @@ def validating_coming_information(msg_incoming_data: dict) -> tuple:
             if msg_incoming_data["file_name"] != "":
                 if msg_incoming_data["folder_id"] != "":
 
-                    logging.info(f" Downloading File from Google Drive")
-
                     folder_id = msg_incoming_data["folder_id"]
                     file_name = msg_incoming_data['file_name']
                     credentials = msg_incoming_data['credentials']
+
+                    logging.info(f" Downloading file {file_name} from Google Drive")
 
                     google_drive_ = GoogleDriveUtilities(folder_id, credentials)
                     download_status, download_message = google_drive_.download_file(file_name)
@@ -133,8 +133,9 @@ class MqttServerBrokerClient:
 
             if self.validation_status and validation_error == "No errors":
 
-                logging.info(f"Incoming message validated at topic: {msg.topic} ")
-                self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], "Initializing Cutting Process")
+                logging.info(f"Incoming message has been validated at topic: {msg.topic} ")
+                self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"],
+                                         "Initializing Cutting Process")
 
             if not self.validation_status:
                 self.mqtt_client.publish(publishing_topics["confirmation_trigger_cutting"], validation_error)
