@@ -35,7 +35,6 @@ class GcodeSender:
         self.serial_connection.flushInput()
 
     def __send_home_machine(self):
-        print(self.laser_machine)
         if self.laser_machine != 'sculpfun_s9_proofs':
             send_home_g_code = '$H'
             self.__send_g_code_command(command=send_home_g_code)

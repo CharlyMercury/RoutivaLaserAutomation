@@ -77,7 +77,7 @@ class MqttClient:
         :param rc:
         :return:
         """
-        self.validate_connection()
+        print(self.validate_connection())
         logging.info(f"Connected with result code {rc}")
         # self.client_id = client._client_id.decode()
 
