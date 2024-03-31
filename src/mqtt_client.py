@@ -77,8 +77,8 @@ class MqttClient:
         :param rc:
         :return:
         """
-        if self.validate_connection:
-            logging.info(f"Connected with result code {rc}")
+        self.validate_connection()
+        logging.info(f"Connected with result code {rc}")
         # self.client_id = client._client_id.decode()
 
     def __on_disconnect__(self, client, userdata, rc):
