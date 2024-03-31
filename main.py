@@ -73,6 +73,8 @@ def run() -> None:
     except Exception as err:
         logging.error(f'An error occurred: {err}', exc_info=True)
 
+    print("First State -  Download gcode:  PASSED ")
+
     try:
         machine_actuators = MachineActuators(broker_address, broker_port=1883)
         machine_actuators.turn_on_off_actuators(False)
