@@ -28,7 +28,7 @@ Mqtt client subscriber
     - $ mosquitto_sub -h 192.168.1.192 -p 1883 -t my/topic
 
 """
-import time
+import logging
 import paho.mqtt.client as mqtt
 
 
@@ -77,8 +77,8 @@ class MqttClient:
         :param rc:
         :return:
         """
-        print(self.validate_connection)
-        # print(f"Connected with result code {rc}")
+        logging.info(self.validate_connection)
+        logging.info(f"Connected with result code {rc}")
         # self.client_id = client._client_id.decode()
 
     def __on_disconnect__(self, client, userdata, rc):
@@ -154,7 +154,7 @@ class MqttClient:
         :return:
         """
         for topic in topics:
-            # print(f"Subscribing to {topics}")
+            logging.info(f"Subscribing to {topics}")
             self.client.subscribe(topic)
 
     def validate_connection(self):
