@@ -58,72 +58,78 @@ def run() -> None:
     broker_address = '192.168.0.192'
     server_broker_address = '192.168.0.192'
     laser_machine_, file_path = '', ''
-    machine_actuators = None
     mqtt_client = MqttServerBrokerClient(server_broker_address, 1883)
+    machine_actuators = MachineActuators(broker_address, broker_port=1883)
 
-    # First State - Download gcode
-    try:
-        while True:
-            if mqtt_client.validation_status:
-                mqtt_client.return_parameters_()
-                file_path = f"gcodes/{mqtt_client.file_name}"
-                laser_machine_ = mqtt_client.laser_machine
-                logging.info(f"Gcode has been downloaded successfully: {file_path}")
-                break
-    except Exception as err:
-        logging.error(f'An error occurred: {err}', exc_info=True)
+    while True:
+        # First State - Download gcode
+        try:
+            while True:
+                if mqtt_client.validation_status:
+                    mqtt_client.return_parameters_()
+                    file_path = f"gcodes/{mqtt_client.file_name}"
+                    laser_machine_ = mqtt_client.laser_machine
+                    logging.info(f"Gcode has been downloaded successfully: {file_path}")
+                    break
+        except Exception as err:
+            logging.error(f'An error occurred: {err}', exc_info=True)
 
-    print("First State -  Download gcode:  PASSED ")
+        print("First State -  Download gcode:  PASSED ")
 
-    try:
-        machine_actuators = MachineActuators(broker_address, broker_port=1883)
-        machine_actuators.turn_on_off_actuators(False)
-        machine_actuators.turn_on_off_actuators(True)
-        # machine_status = run_machine_status(broker_address)
-        if machine_status == "machine is ready to run":
-            logging.info("Machine Status validated: let's get the machine name")
-    except Exception as err:
-        logging.error(f'An error occurred: {err}', exc_info=True)
+        # Second State - Turn On Actuators and checking Machine State
+        try:
+            machine_actuators.turn_on_off_actuators(False)
+            machine_actuators.turn_on_off_actuators(True)
+            # machine_status = run_machine_status(broker_address)
+            if machine_status == "machine is ready to run":
+                logging.info("Machine Status validated: let's get the machine name")
+        except Exception as err:
+            logging.error(f'An error occurred: {err}', exc_info=True)
 
-    try:
-        if machine_status == "machine is ready to run":
-            laser_machine_parameters = identifying_laser_board(laser_machine_)
-            logging.info(f"Machine Name: {laser_machine_parameters}")
-        else:
-            raise Exception("The Machine is not ready to run")
-    except Exception as err:
-        logging.error(f'An error occurred: {err}', exc_info=True)
+        try:
+            if machine_status == "machine is ready to run":
+                laser_machine_parameters = identifying_laser_board(laser_machine_)
+                logging.info(f"Machine Name: {laser_machine_parameters}")
+            else:
+                raise Exception("The Machine is not ready to run")
+        except Exception as err:
+            logging.error(f'An error occurred: {err}', exc_info=True)
 
-    try:
-        g_code_sender = GcodeSender(
-            laser_machine_parameters['port'],
-            laser_machine_parameters['baud_rate'],
-            laser_machine_
-            )
-        connection_response = g_code_sender.connection()
-        if connection_response == f'Serial connection established on ' \
-                                  f'{laser_machine_parameters["port"]} at ' \
-                                  f'{laser_machine_parameters["baud_rate"]} bps.':
-            laser_status = True
-            logging.info(f" Connected to laser machine: {connection_response}")
-        elif connection_response == 'Serial Connection Failed':
-            laser_status = False
+        print("Second State -  Actuators and Sensors:  PASSED ")
 
-        if laser_status:
-            time.sleep(4)
-            logging.info(f"Sending Gcode to machine: {file_path}")
-            print(file_path)
-            g_code_sender_status = g_code_sender.send_g_code(gcode_path=file_path)
+        # Third State - Send Gcode
+        try:
+            g_code_sender = GcodeSender(
+                laser_machine_parameters['port'],
+                laser_machine_parameters['baud_rate'],
+                laser_machine_
+                )
+            connection_response = g_code_sender.connection()
+            if connection_response == f'Serial connection established on ' \
+                                      f'{laser_machine_parameters["port"]} at ' \
+                                      f'{laser_machine_parameters["baud_rate"]} bps.':
+                laser_status = True
+                logging.info(f" Connected to laser machine: {connection_response}")
+            elif connection_response == 'Serial Connection Failed':
+                laser_status = False
 
-            if g_code_sender_status == 'Finished':
-                logging.info("Finishing job.")
-                os.remove(f"./gcodes/{mqtt_client.file_name}")
-                machine_actuators.turn_on_off_actuators(False)
-                g_code_sender.close_serial_connection()
-        else:
-            raise Exception(" Problem to connect to machine ")
-    except Exception as err:
-        logging.error(f'An error occurred: {err}', exc_info=True)
+            if laser_status:
+                time.sleep(4)
+                logging.info(f"Sending Gcode to machine: {file_path}")
+                print(file_path)
+                g_code_sender_status = g_code_sender.send_g_code(gcode_path=file_path)
+
+                if g_code_sender_status == 'Finished':
+                    logging.info("Finishing job.")
+                    os.remove(f"./gcodes/{mqtt_client.file_name}")
+                    machine_actuators.turn_on_off_actuators(False)
+                    g_code_sender.close_serial_connection()
+            else:
+                raise Exception(" Problem to connect to machine ")
+        except Exception as err:
+            logging.error(f'An error occurred: {err}', exc_info=True)
+
+        print("Third State -  Send Gcode:  PASSED ")
 
 
 if __name__ == "__main__":
