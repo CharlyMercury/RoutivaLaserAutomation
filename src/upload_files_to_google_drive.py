@@ -70,12 +70,12 @@ with open('./src/google_drive_code/my_creds.json', 'r') as file:
 
 topic_to_publish = "routiva_server/trigger_cutting"
 message_to_publish = {
-    'machine_name': 'sculpfun_s9_proofs',
+    'machine_name': 'sculpfun_s30_90_90',
     'file_name': 'Corte.gcode',
     'mdf_type': 'natural_mdf',
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
     'credentials': credentials_dict}
 
-mqtt_client = MqttClient(broker_address='192.168.0.192', broker_port=1883, client_id_='grive_uploader')
+mqtt_client = MqttClient(broker_address='192.168.1.192', broker_port=1883, client_id_='grive_uploader')
 mqtt_client.connect()
 mqtt_client.publish(topic_to_publish, json.dumps(message_to_publish))

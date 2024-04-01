@@ -31,17 +31,19 @@ class GcodeSender:
             time.sleep(0.001)
 
     def __wake_up_machine(self):
-        self.__send_g_code_command(command="\r\n\r\n")
+        # self.__send_g_code_command(command="\r\n\r\n")
         self.serial_connection.flushInput()
 
     def __send_home_machine(self):
         if self.laser_machine != 'sculpfun_s9_proofs':
+            print("sending home")
             send_home_g_code = '$H'
             self.__send_g_code_command(command=send_home_g_code)
 
     def send_g_code(self, gcode_path: str):
         g_code_data = open(gcode_path, 'r')
         print('Wake up machine')
+        self.__wake_up_machine()
         self.__wake_up_machine()
         print('Sending Laser Machine to Home')
         self.__send_home_machine()
