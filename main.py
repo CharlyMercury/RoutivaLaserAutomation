@@ -96,7 +96,7 @@ def run() -> None:
             logging.error(f'An error occurred: {err}', exc_info=True)
 
         print("Second State -  Actuators and Sensors:  PASSED ")
-
+        time.sleep(5)
         # Third State - Send Gcode
         try:
             g_code_sender = GcodeSender(
