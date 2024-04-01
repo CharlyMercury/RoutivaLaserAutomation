@@ -26,14 +26,12 @@ class GcodeSender:
         element_to_laser = command.strip().encode() + str.encode('\n')
         self.serial_connection.write(element_to_laser)
         response = self.serial_connection.readline().decode('utf-8').strip()
-        print(response)
         while response != 'ok':
             response = self.serial_connection.readline().decode('utf-8').strip()
-            print(response)
             time.sleep(0.001)
 
     def __wake_up_machine(self):
-        # self.__send_g_code_command(command="\r\n\r\n")
+        self.__send_g_code_command(command="\r\n\r\n")
         self.serial_connection.flushInput()
 
     def __send_home_machine(self):
