@@ -144,8 +144,9 @@ sudo nano /etc/udev/rules.d/10-usb-serial.rules
 
 ``` nano
 KERNELS=="1-1.1:1.0", SYMLINK+="sculpfun_s30_90_90"
-KERNELS=="1-1.2:1.0", SYMLINK+="sculpfun_s30_40_40_rotatory"
 KERNELS=="1-1.3:1.0", SYMLINK+="sculpfun_s9_proofs"
+KERNELS=="1-1.2:1.0", SYMLINK+="cam1"
+KERNELS=="1-1.4:1.0", SYMLINK+="cam2"
 ```
 
 ```bash

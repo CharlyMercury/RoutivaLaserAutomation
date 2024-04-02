@@ -11,25 +11,36 @@ Go to
 
 edumediatics@raspberrypi:~ $ cd /home/edumediatics/.config/autostart/
 
-touch camera.desktop and add
+touch 1_camera.desktop and add
 
 #!/bin/bash
-# edumediatics-Autorstart custom script
-# Location /home/edumediatics/
+# routiva-Autorstart custom script
+# Location /home/routiva/
 [Desktop Entry]
 Type=Application
 Name=Routivacam
-Exec=/home/edumediatics/mediamtx
+Exec=/home/routiva/mediamtx
 
-touch camera_1.desktop and add
+touch 2_camera.desktop and add
 
 #!/bin/bash
-# edumediatics-Autorstart custom script
-# Location /home/edumediatics/
+# routiva-Autorstart custom script
+# Location /home/routiva/
 [Desktop Entry]
 Type=Application
-Name=Routivacam
-Exec=ffmpeg -input_format h264 -f video4linux2 -video_size 1920x1080 -framerate 30 -i /dev/video0 -c:v copy -an -f rtsp rtsp://localhost:8554/routivacam -rtsp_transport tcp
+Name=SRoutivacam
+Exec=ffmpeg -input_format h264 -f video4linux2 -video_size 1920x1080 -framerate 30 -i /dev/video2 -c:v copy -an -f rtsp rtsp://localhost:8554/routivacam -rtsp_transport tcp
+
+touch 3_camera.desktop and add
+
+#!/bin/bash
+# routiva-Autorstart custom script
+# Location /home/routiva/
+[Desktop Entry]
+Type=Application
+Name=TRoutivacam
+Exec=ffmpeg -input_format mjpeg -f video4linux2 -video_size 800x600 -framerate 30 -i /dev/video0 -c:v copy -an -f rtsp rtsp://localhost:8554/routivacam2 -rtsp_transport tcp
+routiva@raspberrypi:~/.config/autostart $
 
 sudo reboot
 
@@ -37,6 +48,7 @@ add the following ip in vlc
 
 
 rtsp://192.168.1.192:8554/routivacam
+rtsp://192.168.1.192:8554/routivacam2
 
 
 how to know characteristics of the camera: 
