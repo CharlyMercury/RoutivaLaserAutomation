@@ -55,8 +55,8 @@ def run() -> None:
         'baud_rate': 0
     }
     machine_status = 'machine is ready to run'
-    broker_address = '192.168.1.192'
-    server_broker_address = '192.168.1.192'
+    broker_address = '192.168.100.192'
+    server_broker_address = '192.168.100.192'
     laser_machine_, file_path = '', ''
     mqtt_client = MqttServerBrokerClient(server_broker_address, 1883)
     machine_actuators = MachineActuators(broker_address, broker_port=1883)

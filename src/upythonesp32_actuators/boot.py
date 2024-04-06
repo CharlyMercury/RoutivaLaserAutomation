@@ -13,9 +13,9 @@ gc.collect()
 # Complete project details at https://RandomNerdTutorials.com/micropython-hc-sr04-ultrasonic-esp32-esp8266/
 from time import sleep
 
-ssid = 'INFINITUM2A5B_2.4'
-password = 'FMxMFmE237'
-mqtt_server = '192.168.1.192'
+ssid = 'Totalplay-2.4G-fee0'
+password = 'UUuQkjdK56LGPyjX'
+mqtt_server = '192.168.100.192'
 # ssid = 'IZZI-6D04'
 # password = 'F0AF85386D04'
 # mqtt_server = 'broker.hivemq.com'
