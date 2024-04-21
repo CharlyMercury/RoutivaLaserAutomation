@@ -76,6 +76,6 @@ message_to_publish = {
     'folder_id': '1Clv8oI2A3zdSZeqg5oFlXGLsxFN6GhKL',
     'credentials': credentials_dict}
 
-mqtt_client = MqttClient(broker_address='192.168.1.192', broker_port=1883, client_id_='grive_uploader')
+mqtt_client = MqttClient(broker_address='192.168.100.192', broker_port=1883, client_id_='grive_uploader')
 mqtt_client.connect()
 mqtt_client.publish(topic_to_publish, json.dumps(message_to_publish))
