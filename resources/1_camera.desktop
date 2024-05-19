@@ -1,0 +1,7 @@
+#!/bin/bash
+# routiva-Autorstart custom script
+# Location /home/routiva/
+[Desktop Entry]
+Type=Application
+Name=Routivacam
+Exec=/home/routiva/mediamtx

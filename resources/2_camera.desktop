@@ -1,0 +1,7 @@
+#!/bin/bash
+# routiva-Autorstart custom script
+# Location /home/routiva/
+[Desktop Entry]
+Type=Application
+Name=SRoutivacam
+Exec=ffmpeg -input_format h264 -f video4linux2 -video_size 1920x1080 -framerate 30 -i /dev/video2 -c:v copy -an -f rtsp rtsp://localhost:8554/routivacam -rtsp_transport tcp

@@ -1,0 +1,7 @@
+#!/bin/bash
+# routiva-Autorstart custom script
+# Location /home/routiva/RoutivaLaserAutomation
+[Desktop Entry]
+Type=Application
+Name=RoutivaLaserMachine
+Exec=lxterminal --working-directory=/home/routiva/RoutivaLaserAutomation -e ./start.sh
